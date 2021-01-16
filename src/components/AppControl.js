@@ -14,7 +14,9 @@ export class AppControl extends Component {
         this.state = {
             addedSections: [],
             objectOnDisplay: null,
-            typeObjectOnDisplay: null
+            typeObjectOnDisplay: null,
+            currentCourseKey: null,
+            currentSectionKey: null
         }
 
         this.coursesData = null;
@@ -46,7 +48,8 @@ export class AppControl extends Component {
             console.log(res);
             this.setState({
                 objectOnDisplay: res,
-                typeObjectOnDisplay: SearchType.COURSE
+                typeObjectOnDisplay: SearchType.COURSE,
+                currentCourseKey: course
             });
         })
         .catch((e) => {
@@ -62,7 +65,9 @@ export class AppControl extends Component {
             console.log(res);
             this.setState({
                 objectOnDisplay: res,
-                typeObjectOnDisplay: SearchType.SECTION
+                typeObjectOnDisplay: SearchType.SECTION,
+                currentCourseKey: course,
+                currentSectionKey: section
             });
         })
         .catch((e) => {
@@ -162,9 +167,12 @@ export class AppControl extends Component {
         if (type === SearchType.DEPT) {
             return (<DeptResultDisplay objectOnDisplay={objectOnDisplay} />);
         } else if (type === SearchType.COURSE) {
-            return (<CourseResultDisplay objectOnDisplay={objectOnDisplay} />);
+            return (<CourseResultDisplay objectOnDisplay={objectOnDisplay}
+                                        courseKey={this.state.currentCourseKey} />);
         } else if (type === SearchType.SECTION) {
-            return (<SectionResultDisplay objectOnDisplay={objectOnDisplay} />);
+            return (<SectionResultDisplay objectOnDisplay={objectOnDisplay}
+                                        courseKey={this.state.currentCourseKey}
+                                        sectionKey={this.state.currentSectionKey} />);
         } else {
             return null;
         }

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ResultDisplay from './ResultDisplay';
+import ResultDisplayItem from './ResultDisplayItem';
 
 export class DeptResultDisplay extends Component {
     getTitle() {
         const obj = this.props.objectOnDisplay;
-        return `${obj.title} ${obj.subjCode}`;
+        return `${obj.title} (${obj.subjCode})`;
     }
 
     getSubHeading() {
@@ -12,7 +13,20 @@ export class DeptResultDisplay extends Component {
     }
 
     renderDisplayComponents() {
-        return (<div></div>);
+        return (<div>
+            <p>Courses:</p>
+            { this.renderCourses() }
+        </div>);
+    }
+
+    renderCourses() {
+        const courses = Object.values(this.props.objectOnDisplay.courses);
+        return courses.map((course) => {
+            return (<ResultDisplayItem key={course.courseCode}
+                                        heading={course.courseCode}
+                                        label={course.courseTitle} />);
+        });
+        
     }
 
     render() {
