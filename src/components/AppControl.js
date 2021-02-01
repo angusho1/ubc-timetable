@@ -8,6 +8,7 @@ import CourseResultDisplay from './result-displays/CourseResultDisplay';
 import SectionResultDisplay from './result-displays/SectionResultDisplay';
 
 export class AppControl extends Component {
+    timetableControl = null;
 
     constructor(props) {
         super(props);
@@ -161,6 +162,25 @@ export class AppControl extends Component {
         
     }
 
+    handleAddRemoveSection = () => {
+        console.log(this.timetableControl);
+        if (this.isSectionAdded()) {
+            
+        } else {
+            this.timetableControl.addSection('table1', this.state.objectOnDisplay, this.state.currentCourseKey, this.state.currentSectionKey);
+        }
+    }
+
+    isSectionAdded = () => {
+        const sectionCode = this.getCurrentSectionCode();
+        return this.state.addedSections.includes(sectionCode);
+    }
+
+    getCurrentSectionCode() {
+        const deptKey = this.state.objectOnDisplay.subjCode;
+        return `${deptKey} ${this.state.currentCourseKey} ${this.state.currentSectionKey}`;
+    }
+
     renderResultDisplay() {
         const type = this.state.typeObjectOnDisplay;
         const objectOnDisplay = this.state.objectOnDisplay;
@@ -172,7 +192,9 @@ export class AppControl extends Component {
         } else if (type === SearchType.SECTION) {
             return (<SectionResultDisplay objectOnDisplay={objectOnDisplay}
                                         courseKey={this.state.currentCourseKey}
-                                        sectionKey={this.state.currentSectionKey} />);
+                                        sectionKey={this.state.currentSectionKey}
+                                        handleAddRemoveSection={this.handleAddRemoveSection}
+                                        isSectionAdded={this.isSectionAdded()} />);
         } else {
             return null;
         }

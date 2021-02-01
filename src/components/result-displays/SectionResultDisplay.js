@@ -33,11 +33,19 @@ export class SectionResultDisplay extends Component {
     }
 
     renderAddRemoveButton() {
-        // TODO
+        return (
+            <button className="btn small-btn" onClick={this.props.handleAddRemoveSection}>
+                { this.getSectionButtonLabel() }
+            </button>
+        );
     }
 
     renderClassDisplays(classObjects) {
         // TODO
+    }
+
+    getSectionButtonLabel() {
+        return this.props.isSectionAdded ? '- Remove Section' : '+ Add Section';
     }
 
     getCourseObj() {

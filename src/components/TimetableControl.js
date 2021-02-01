@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Timetable from './Timetable';
 import TimetableMenu from './TimetableMenu';
-import deptObjj from './test';
+// import deptObjj from './test';
 
 const DEFAULT_STARTTIME = 9;
 const DEFAULT_ENDTIME = 18;
@@ -157,7 +157,7 @@ export class TimetableControl extends Component {
                 cellToAdd.occupied = false;
                 cellToAdd.replaced = false;
             } else {
-                console.log('Nothiing to remove');
+                console.log('Nothing to remove');
             }
         }
     }
@@ -214,27 +214,27 @@ export class TimetableControl extends Component {
     }
 
     addSectionTest() {
-        this.addSection('table1', deptObjj, '110','L1F');
-        this.addSection('table1', deptObjj, '210','103');
+        // this.addSection('table1', deptObjj, '110','L1F');
+        // this.addSection('table1', deptObjj, '210','103');
     }
 
     addSectionTest2() {
-        this.addSection('table1', deptObjj, '210','103');
-        this.addSection('table1', deptObjj, '110','L1F');
+        // this.addSection('table1', deptObjj, '210','103');
+        // this.addSection('table1', deptObjj, '110','L1F');
     }
 
     removeSectionTest() {
-        const sectionObj1 = deptObjj.courses['110'].sections['L1F'];
-        const sectionObj2 = deptObjj.courses['210'].sections['103'];
-        this.removeSection('table1', sectionObj1);
-        this.removeSection('table1', sectionObj2);
+        // const sectionObj1 = deptObjj.courses['110'].sections['L1F'];
+        // const sectionObj2 = deptObjj.courses['210'].sections['103'];
+        // this.removeSection('table1', sectionObj1);
+        // this.removeSection('table1', sectionObj2);
     }
 
     removeSectionTest2() {
-        const sectionObj1 = deptObjj.courses['110'].sections['L1F'];
-        const sectionObj2 = deptObjj.courses['210'].sections['103'];
-        this.removeSection('table1', sectionObj2);
-        this.removeSection('table1', sectionObj1);
+        // const sectionObj1 = deptObjj.courses['110'].sections['L1F'];
+        // const sectionObj2 = deptObjj.courses['210'].sections['103'];
+        // this.removeSection('table1', sectionObj2);
+        // this.removeSection('table1', sectionObj1);
     }
 }
 
