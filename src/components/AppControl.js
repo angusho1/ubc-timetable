@@ -159,10 +159,6 @@ export class AppControl extends Component {
         console.log(e.message);
     }
 
-    addSection(deptObj, course, section) {
-        
-    }
-
     handleAddRemoveSection = () => {
         if (this.isSectionAdded()) {
             
@@ -174,8 +170,6 @@ export class AppControl extends Component {
                 course: this.state.currentCourseKey,
                 section: this.state.currentSectionKey
             });
-            
-            // console.log(this.props.addSection);
         }
     }
 

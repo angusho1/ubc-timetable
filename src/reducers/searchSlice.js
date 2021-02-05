@@ -1,15 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    deptValue: '',
-    deptValid: false,
-    deptSearched: false,
-    courseValue: '',
-    courseValid: false,
-    courseSearched: false,
-    sectionValue: '',
-    sectionValid: false,
-    sectionSearched: false
+    addedSections: [],
+    objectOnDisplay: null,
+    typeObjectOnDisplay: null,
+    currentCourseKey: null,
+    currentSectionKey: null
 }
 
 export const searchSlice = createSlice({
