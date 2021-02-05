@@ -26,7 +26,7 @@ export const timetableSlice = createSlice({
     reducers: {
         addSection: (state, action) => {
             const { tableKey, deptObj, course, section } = action.payload;
-            addSection1(state, tableKey, deptObj, course, section)
+            addSection1(state, tableKey, deptObj, course, section);
         },
         removeSection: (state, action) => {
             const { tableKey, sectionObj } = action.payload;
@@ -155,9 +155,9 @@ function updateCellsRemoved(matrix, row, column) {
 function insertRowsAtStart(matrix, classStartTime, tableStartTime) {
     const numRows = (tableStartTime - classStartTime) * 2;
     for (let i = 0; i < numRows; i++) {
-        matrix.splice(i, 0, Array(7));
+        matrix.unshift(Array(7));
         for (let j = 0; j < 7; j++) {
-            matrix[0][j] = this.initCell();
+            matrix[0][j] = initCell();
         }
     }
 }
@@ -166,9 +166,9 @@ function insertRowsAtEnd(matrix, classEndTime, tableEndTime) {
     const numRows = (classEndTime - tableEndTime) * 2;
     for (let i = 0; i < numRows; i++) {
         matrix.push(Array(7));
+        let lastIndex = matrix.length - 1;
         for (let j = 0; j < 7; j++) {
-            let lastIndex = matrix.length - 1;
-            matrix[lastIndex][j] = this.initCell();
+            matrix[lastIndex][j] = initCell();
         }
     }
 }
