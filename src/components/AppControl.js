@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { SearchType } from '../data/SearchType';
-import ResultDisplay from './result-displays/ResultDisplay';
 import SearchForm from './SearchForm';
 import TimetableControl from './TimetableControl';
 import DeptResultDisplay from './result-displays/DeptResultDisplay';
@@ -218,9 +217,6 @@ export class AppControl extends Component {
                                 searchSection={this.searchSection.bind(this)}
                                 />
                     {this.renderResultDisplay()}
-                    {/* <ResultDisplay  searchType={this.typeObjectOnDisplay}
-                                    objectOnDisplay={this.objectOnDisplay}
-                                    /> */}
                 </div>
                 <TimetableControl />
             </div>
@@ -238,8 +234,5 @@ const mapDispatch = dispatch => {
         removeSection: dispatch(removeSection()),
     }
 }
-
-// export default AppControl;
-console.log(addSection);
 
 export default connect(null, { addSection, removeSection })(AppControl);
