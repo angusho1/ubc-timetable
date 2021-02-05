@@ -60,7 +60,6 @@ function initCell() {
 function addSection1(state, tableKey, deptObj, course, section) {
     const sectionObj = deptObj.courses[course].sections[section];
     const table = state[tableKey];
-    // let updatedMatrix = table.matrix.slice();
     let matrix = table.matrix;
     let startTime = table.startTime;
     let endTime = table.endTime;
@@ -98,16 +97,6 @@ function addSection1(state, tableKey, deptObj, course, section) {
     table.currentTableKey = tableKey;
     table.startTime = startTime;
     table.endTime = endTime;
-
-    // this.setState({
-    //     currentTableKey: tableKey,
-    //     [tableKey]: {
-    //         startTime,
-    //         endTime,
-    //         term: table.term,
-    //         matrix: matrix
-    //     }
-    // });
 }
 
 function removeSection1(state, tableKey, sectionObj) {
@@ -124,16 +113,6 @@ function removeSection1(state, tableKey, sectionObj) {
             updateCellsRemoved(matrix, row, column);
         });
     }
-
-    // this.setState({
-    //     currentTableKey: tableKey,
-    //     [tableKey]: {
-    //         startTime: table.startTime,
-    //         endTime: table.endTime,
-    //         term: table.term,
-    //         matrix: matrix
-    //     }
-    // });
 }
 
 function updateCellsAdded(matrix, row, column, courseInfo, label, classLength) {

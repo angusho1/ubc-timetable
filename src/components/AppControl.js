@@ -6,6 +6,8 @@ import TimetableControl from './TimetableControl';
 import DeptResultDisplay from './result-displays/DeptResultDisplay';
 import CourseResultDisplay from './result-displays/CourseResultDisplay';
 import SectionResultDisplay from './result-displays/SectionResultDisplay';
+import { connect } from 'react-redux';
+import { addSection, removeSection } from '../reducers/timetableSlice';
 
 export class AppControl extends Component {
     timetableControl = null;
@@ -163,11 +165,18 @@ export class AppControl extends Component {
     }
 
     handleAddRemoveSection = () => {
-        console.log(this.timetableControl);
         if (this.isSectionAdded()) {
             
         } else {
-            this.timetableControl.addSection('table1', this.state.objectOnDisplay, this.state.currentCourseKey, this.state.currentSectionKey);
+            // this.timetableControl.addSection('table1', this.state.objectOnDisplay, this.state.currentCourseKey, this.state.currentSectionKey);
+            this.props.addSection({
+                tableKey: 'table1',
+                deptObj: this.state.objectOnDisplay,
+                course: this.state.currentCourseKey,
+                section: this.state.currentSectionKey
+            });
+            
+            // console.log(this.props.addSection);
         }
     }
 
@@ -223,4 +232,14 @@ function formatKey(key) {
     return key.toUpperCase().replace(/\s+/g, '');
 }
 
-export default AppControl;
+const mapDispatch = dispatch => {
+    return {
+        addSection: dispatch(addSection()),
+        removeSection: dispatch(removeSection()),
+    }
+}
+
+// export default AppControl;
+console.log(addSection);
+
+export default connect(null, { addSection, removeSection })(AppControl);

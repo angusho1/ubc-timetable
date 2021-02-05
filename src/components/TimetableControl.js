@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Timetable from './Timetable';
 import TimetableMenu from './TimetableMenu';
-// import deptObjj from './test';
-
-const DEFAULT_STARTTIME = 9;
-const DEFAULT_ENDTIME = 18;
-const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 5, 'Sat' : 6};
 
 export class TimetableControl extends Component {
 
@@ -66,36 +61,14 @@ export class TimetableControl extends Component {
     }
 }
 
-/**
- * converts time string formatted as "HH:MM" and returns a number
- * ex: 14:30 -> 14.5
- * 
- * @param {string} str  the time string to convert
- * 
- * @returns {number} the converted time
- */
-function convertTimeToNumber(str) {
-    const timeArray = str.split(':');
-    const hours = parseInt(timeArray[0]);
-    const minutes = parseInt(timeArray[1]) / 60;
-    // console.log(`${str} -> ${hours + minutes}`);
-    return hours + minutes;
-}
-
-function getCellLabel(deptObj, course, section) {
-    const sectionObj = deptObj.courses[course].sections[section];
-    return `${sectionObj.sectionCode} (${sectionObj.activity})`;
-}
-
-const mapStateToProps = state => ({
+const mapState = state => ({
     currentTableKey: state.timetable.currentTableKey,
     table1: state.timetable.table1,
     table2: state.timetable.table2
 });
 
-const mapDispatchToProps = {
+const mapDispatch = {
     
 }
 
-// export default TimetableControl;
-export default connect(mapStateToProps, mapDispatchToProps)(TimetableControl);
+export default connect(mapState, mapDispatch)(TimetableControl);
