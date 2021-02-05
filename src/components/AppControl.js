@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SearchType } from '../data/SearchType';
-import SearchForm from './SearchForm';
-import TimetableControl from './TimetableControl';
+import SearchForm from './search/SearchForm';
+import TimetableControl from './timetable/TimetableControl';
 import DeptResultDisplay from './result-displays/DeptResultDisplay';
 import CourseResultDisplay from './result-displays/CourseResultDisplay';
 import SectionResultDisplay from './result-displays/SectionResultDisplay';
