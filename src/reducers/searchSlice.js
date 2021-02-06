@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    addedSections: [],
     objectOnDisplay: null,
     typeObjectOnDisplay: null,
     currentCourseKey: null,
@@ -22,6 +21,8 @@ export const searchSlice = createSlice({
 
         }
     }
-})
+});
+
+export const { searchDept, searchCourse, searchSection } = searchSlice.actions;
 
 export default searchSlice.reducer;

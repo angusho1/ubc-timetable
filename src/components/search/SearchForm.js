@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 
 const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
@@ -147,3 +149,4 @@ export class SearchForm extends Component {
 }
 
 export default SearchForm;
+// export default connect(null, { searchDept, searchCourse, searchSection })(SearchForm);

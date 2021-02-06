@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
 
 export class AppControl extends Component {
-    timetableControl = null;
 
     constructor(props) {
         super(props);
@@ -163,7 +162,6 @@ export class AppControl extends Component {
         if (this.isSectionAdded()) {
             
         } else {
-            // this.timetableControl.addSection('table1', this.state.objectOnDisplay, this.state.currentCourseKey, this.state.currentSectionKey);
             this.props.addSection({
                 tableKey: 'table1',
                 deptObj: this.state.objectOnDisplay,
@@ -220,13 +218,6 @@ export class AppControl extends Component {
 
 function formatKey(key) {
     return key.toUpperCase().replace(/\s+/g, '');
-}
-
-const mapDispatch = dispatch => {
-    return {
-        addSection: dispatch(addSection()),
-        removeSection: dispatch(removeSection()),
-    }
 }
 
 export default connect(null, { addSection, removeSection })(AppControl);

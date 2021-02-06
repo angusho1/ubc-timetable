@@ -6,6 +6,7 @@ const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 
 
 const initialState = {
     currentTableKey: 'table1',
+    addedSections: [],
     table1: {
         startTime: DEFAULT_STARTTIME,
         endTime: DEFAULT_ENDTIME,
@@ -58,6 +59,10 @@ function initCell() {
 }
 
 function addSection1(state, tableKey, deptObj, course, section) {
+    if (sectionAdded(state, `${deptObj.subjCode} ${course} ${section}`)) {
+        return;
+    }
+
     const sectionObj = deptObj.courses[course].sections[section];
     const table = state[tableKey];
     let matrix = table.matrix;
@@ -87,19 +92,20 @@ function addSection1(state, tableKey, deptObj, course, section) {
             let row = (classStartTime - startTime) * 2;
 
             updateCellsAdded(matrix, row, column, courseInfo, label, classLength);
-
-            // cellObj.cell.addEventListener('click', e => {
-            //     displaySectionRes(cellObj.deptObj, cellObj.courseObj, cellObj.sectionObj);
-            // });
         });
     }
 
-    table.currentTableKey = tableKey;
+    state.currentTableKey = tableKey;
     table.startTime = startTime;
     table.endTime = endTime;
+    state.addedSections.push(`${deptObj.subjCode} ${course} ${section}`);
 }
 
 function removeSection1(state, tableKey, sectionObj) {
+    if (!sectionAdded(state, sectionObj.sectionCode)) {
+        return;
+    }
+
     const table = state[tableKey];
     let matrix = table.matrix;
 
@@ -113,6 +119,13 @@ function removeSection1(state, tableKey, sectionObj) {
             updateCellsRemoved(matrix, row, column);
         });
     }
+
+    state.currentTableKey = tableKey;
+    state.addedSections.splice(state.addedSections.indexOf(sectionObj.sectionCode), 1);
+}
+
+function sectionAdded(state, sectionCode) {
+    return state.addedSections.includes(sectionCode);
 }
 
 function updateCellsAdded(matrix, row, column, courseInfo, label, classLength) {
