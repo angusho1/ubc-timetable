@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 
@@ -37,9 +38,11 @@ export class SearchForm extends Component {
         const course = this.state.courseValue;
         const section = this.state.sectionValue;
         const inputValidityState = this.validateInputs(dept, course, section);
-        const search = this.determineSearch(dept, course, section);
+        // const search = this.determineSearch(dept, course, section);
         this.updateInputState(dept, course, section, inputValidityState);
-        search(dept, course, section);
+        this.determineSearch(dept, course, section);
+
+        // search(dept, course, section);
             // .then((res) => {
 
             // });
@@ -75,9 +78,13 @@ export class SearchForm extends Component {
         const courseEmpty = EMPTY_REGEX.test(course);
         const sectionEmpty = EMPTY_REGEX.test(section);
 
-        if (!sectionEmpty) return this.props.searchSection;
-        if (!courseEmpty) return this.props.searchCourse;
-        return this.props.searchDept;
+        if (!sectionEmpty) {
+            this.props.searchSection({ dept, course, section });
+        } else if (!courseEmpty) {
+            this.props.searchCourse({ dept, course })
+        } else {
+            this.props.searchDept({ dept });
+        }
     }
 
     updateInputState(dept, course, section, inputValidityState) {
@@ -95,14 +102,14 @@ export class SearchForm extends Component {
             deptSearched = true;
         }
 
-        this.setState({
-            deptSearched,
-            courseSearched,
-            sectionSearched,
-            deptValid: inputValidityState.dept,
-            courseValid: inputValidityState.course,
-            sectionValid: inputValidityState.section
-        })
+        // this.setState({
+        //     deptSearched,
+        //     courseSearched,
+        //     sectionSearched,
+        //     deptValid: inputValidityState.dept,
+        //     courseValid: inputValidityState.course,
+        //     sectionValid: inputValidityState.section
+        // });
     }    
 
     render() {
@@ -148,5 +155,34 @@ export class SearchForm extends Component {
     }
 }
 
-export default SearchForm;
-// export default connect(null, { searchDept, searchCourse, searchSection })(SearchForm);
+// const mapDispatch = dispatch => {
+    // return bindActionCreators(
+    //     {
+    //         sDept: searchDept,
+    //         sCourse: searchCourse,
+    //         sSection: searchSection
+    //     },
+    //     dispatch
+    // );
+    // return {
+    //     sDept: event => { 
+    //         console.log(event);
+    //         console.log(searchDept);
+    //         dispatch(searchDept, 1);
+    //     },
+    //     sCourse: event => {
+    //         console.log(event);
+    //         dispatch(searchCourse(event));
+    //     },
+    //     sSection: event => {
+    //         console.log(event);
+    //         dispatch(searchSection(event))
+    //     }
+    // } 
+// }
+
+const mapDispatch = { searchDept, searchCourse, searchSection };
+
+// export default SearchForm;
+
+export default connect(null, mapDispatch)(SearchForm);
