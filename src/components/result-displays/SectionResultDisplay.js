@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem';
 
@@ -50,13 +49,11 @@ export class SectionResultDisplay extends Component {
     }
 
     getCourseObj() {
-        // return this.props.objectOnDisplay.courses[this.props.courseKey];
         return this.props.sectionObj.courseObj;
     }
 
     getSectionObj() {
         return this.props.sectionObj;
-        // return this.getCourseObj().sections[this.props.sectionKey];
     }
 
     render() {
@@ -69,11 +66,4 @@ export class SectionResultDisplay extends Component {
     }
 }
 
-const mapState = state => ({
-    objectOnDisplay: state.search.objectOnDisplay,
-    currentCourseKey: state.search.currentCourseKey,
-    currentSectionKey: state.search.currentSectionkey
-});
-
-// export default SectionResultDisplay
-export default connect(mapState)(SectionResultDisplay);
+export default SectionResultDisplay;

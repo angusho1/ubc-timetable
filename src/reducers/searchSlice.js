@@ -4,8 +4,6 @@ import { SearchType } from '../data/SearchType';
 const initialState = {
     objectOnDisplay: null,
     typeObjectOnDisplay: null,
-    currentCourseKey: null,
-    currentSectionKey: null,
     status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
 }
@@ -54,7 +52,6 @@ export const searchSlice = createSlice({
         },
         [searchCourse.fulfilled]: (state, action) => {
             setSuccessfulSearch(state, action);
-            state.currentCourseKey = action.payload.course;
         },
         [searchCourse.rejected]: setFailedSearch,
 
@@ -63,8 +60,6 @@ export const searchSlice = createSlice({
         },
         [searchSection.fulfilled]: (state, action) => {
             setSuccessfulSearch(state, action);
-            state.currentCourseKey = action.payload.course;
-            state.currentSectionKey = action.payload.section;
         },
         [searchSection.rejected]: setFailedSearch
     }
@@ -91,7 +86,7 @@ function searchDeptByKey(deptKey) {
         .then(data => {
             const deptSearchResult = data.departments[deptKey];
             if (!deptSearchResult) {
-                throw new Error(`${deptKey} is not a valid department`);
+                throw new Error(`'${deptKey}' is not a valid department`);
             }
             return deptSearchResult;
         });
@@ -102,7 +97,7 @@ function searchCourseByKey(deptKey, courseKey) {
         .then(deptSearchResult => {
             const courseSearchResult = deptSearchResult.courses[courseKey];
             if (!courseSearchResult) {
-                throw new Error(`${deptKey} ${courseKey} is not a valid course`);
+                throw new Error(`'${deptKey} ${courseKey}' is not a valid course`);
             }
             courseSearchResult['deptObj'] = copyDeptProperties(deptSearchResult);
             return courseSearchResult;
@@ -114,7 +109,7 @@ function searchSectionByKey(deptKey, courseKey, sectionKey) {
         .then(courseSearchResult => {
             const sectionSearchResult = courseSearchResult.sections[sectionKey];
             if (!sectionSearchResult) {
-                throw new Error(`${deptKey} ${courseKey} ${sectionKey} is not a valid section`);
+                throw new Error(`'${deptKey} ${courseKey} ${sectionKey}' is not a valid section`);
             }
             sectionSearchResult['courseObj'] = copyCourseProperties(courseSearchResult);
             return sectionSearchResult;

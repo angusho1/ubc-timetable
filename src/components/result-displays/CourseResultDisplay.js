@@ -7,7 +7,7 @@ export class CourseResultDisplay extends Component {
     getTitle() {
         const courseObj = this.getCourseObj();
         const dept = courseObj.deptObj.subjCode;
-        return `${dept} ${this.props.courseKey}`;
+        return `${dept} ${courseObj.course}`;
     }
 
     getSubHeading() {
@@ -36,7 +36,6 @@ export class CourseResultDisplay extends Component {
 
     getCourseObj() {
         return this.props.courseObj;
-        // return this.props.objectOnDisplay.courses[this.props.courseKey];
     }
 
     render() {
@@ -49,10 +48,4 @@ export class CourseResultDisplay extends Component {
     }
 }
 
-const mapState = state => ({
-    courseObj: state.search.objectOnDisplay,
-    currentCourseKey: state.search.currentCourseKey,
-    currentSectionKey: state.search.currentSectionkey
-});
-
-export default connect(mapState)(CourseResultDisplay);
+export default CourseResultDisplay;

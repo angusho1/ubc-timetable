@@ -62,11 +62,11 @@ function addSection1(state, tableKey, sectionObj) {
     const deptKey = sectionObj.courseObj.deptObj.subjCode;
     const courseKey = sectionObj.courseObj.course;
     const sectionKey = sectionObj.section;
-    if (sectionAdded(state, `${deptKey} ${courseKey} ${sectionKey}`)) {
-        return;
+    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`
+    if (sectionAdded(state, sectionCode)) {
+        throw new Error(`Section '${sectionCode}' is already in timetable '${tableKey}'`);
     }
 
-    // const sectionObj = deptObj.courses[course].sections[section];
     const table = state[tableKey];
     let matrix = table.matrix;
     let startTime = table.startTime;

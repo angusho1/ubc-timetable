@@ -37,14 +37,8 @@ export class SearchForm extends Component {
         const course = this.state.courseValue;
         const section = this.state.sectionValue;
         const inputValidityState = this.validateInputs(dept, course, section);
-        // const search = this.determineSearch(dept, course, section);
         this.updateInputState(dept, course, section, inputValidityState);
-        this.determineSearch(dept, course, section);
-
-        // search(dept, course, section);
-            // .then((res) => {
-
-            // });
+        this.initSearch(dept, course, section);
     }
 
     clearText(inputName) {
@@ -73,7 +67,7 @@ export class SearchForm extends Component {
         };
     }
 
-    determineSearch(dept, course, section) {
+    initSearch(dept, course, section) {
         const courseEmpty = EMPTY_REGEX.test(course);
         const sectionEmpty = EMPTY_REGEX.test(section);
 
@@ -101,14 +95,14 @@ export class SearchForm extends Component {
             deptSearched = true;
         }
 
-        // this.setState({
-        //     deptSearched,
-        //     courseSearched,
-        //     sectionSearched,
-        //     deptValid: inputValidityState.dept,
-        //     courseValid: inputValidityState.course,
-        //     sectionValid: inputValidityState.section
-        // });
+        this.setState({
+            deptSearched,
+            courseSearched,
+            sectionSearched,
+            deptValid: inputValidityState.dept,
+            courseValid: inputValidityState.course,
+            sectionValid: inputValidityState.section
+        });
     }    
 
     render() {

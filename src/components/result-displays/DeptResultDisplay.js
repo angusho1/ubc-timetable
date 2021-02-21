@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem';
 
@@ -40,11 +39,4 @@ export class DeptResultDisplay extends Component {
     }
 }
 
-const mapState = state => ({
-    objectOnDisplay: state.search.objectOnDisplay,
-    currentCourseKey: state.search.currentCourseKey,
-    currentSectionKey: state.search.currentSectionkey
-});
-
-// export default DeptResultDisplay;
-export default connect(mapState)(DeptResultDisplay);
+export default DeptResultDisplay;
