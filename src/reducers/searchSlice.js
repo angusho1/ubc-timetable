@@ -6,7 +6,7 @@ const initialState = {
     typeObjectOnDisplay: null,
     currentCourseKey: null,
     currentSectionKey: null,
-    status: null,
+    status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
 }
 
@@ -77,8 +77,8 @@ function setPendingSearch(state, type) {
 }
 
 function setSuccessfulSearch(state, action) {
-    state.status = 'completed';
-    state.objectOnDisplay = action.payload.response;
+    state.status = 'successful';
+    state.objectOnDisplay = action.payload;
 }
 
 function setFailedSearch(state, action) {
@@ -104,6 +104,7 @@ function searchCourseByKey(deptKey, courseKey) {
             if (!courseSearchResult) {
                 throw new Error(`${deptKey} ${courseKey} is not a valid course`);
             }
+            courseSearchResult['dept'] = copyDeptProperties({}, deptSearchResult);
             return courseSearchResult;
         });
 }
@@ -117,6 +118,15 @@ function searchSectionByKey(deptKey, courseKey, sectionKey) {
             }
             return sectionSearchResult;
         });
+}
+
+function copyDeptProperties(courseObj, deptObj) {
+    for (let prop in deptObj) {
+        if (Object.prototype.hasOwnProperty.call(deptObj, prop) && prop !== 'courses') {
+            courseObj[prop] = deptObj[prop];
+        }
+    }
+    return courseObj;
 }
 
 /**

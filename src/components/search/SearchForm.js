@@ -154,34 +154,6 @@ export class SearchForm extends Component {
     }
 }
 
-// const mapDispatch = dispatch => {
-    // return bindActionCreators(
-    //     {
-    //         sDept: searchDept,
-    //         sCourse: searchCourse,
-    //         sSection: searchSection
-    //     },
-    //     dispatch
-    // );
-    // return {
-    //     sDept: event => { 
-    //         console.log(event);
-    //         console.log(searchDept);
-    //         dispatch(searchDept, 1);
-    //     },
-    //     sCourse: event => {
-    //         console.log(event);
-    //         dispatch(searchCourse(event));
-    //     },
-    //     sSection: event => {
-    //         console.log(event);
-    //         dispatch(searchSection(event))
-    //     }
-    // } 
-// }
-
 const mapDispatch = { searchDept, searchCourse, searchSection };
-
-// export default SearchForm;
 
 export default connect(null, mapDispatch)(SearchForm);

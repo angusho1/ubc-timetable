@@ -5,14 +5,13 @@ import ResultDisplayItem from './ResultDisplayItem';
 
 export class CourseResultDisplay extends Component {
     getTitle() {
-        const deptObj = this.props.objectOnDisplay;
-        const dept = deptObj.subjCode;
+        const courseObj = this.getCourseObj();
+        const dept = courseObj.dept.subjCode;
         return `${dept} ${this.props.courseKey}`;
     }
 
     getSubHeading() {
-        const courseObj = this.getCourseObj();
-        return courseObj.courseTitle;
+        return this.props.courseObj.courseTitle;
     }
 
     renderDisplayComponents() {
@@ -36,7 +35,8 @@ export class CourseResultDisplay extends Component {
     }
 
     getCourseObj() {
-        return this.props.objectOnDisplay.courses[this.props.courseKey];
+        return this.props.courseObj;
+        // return this.props.objectOnDisplay.courses[this.props.courseKey];
     }
 
     render() {
@@ -50,10 +50,9 @@ export class CourseResultDisplay extends Component {
 }
 
 const mapState = state => ({
-    objectOnDisplay: state.search.objectOnDisplay,
+    courseObj: state.search.objectOnDisplay,
     currentCourseKey: state.search.currentCourseKey,
     currentSectionKey: state.search.currentSectionkey
 });
 
-// export default CourseResultDisplay
 export default connect(mapState)(CourseResultDisplay);
