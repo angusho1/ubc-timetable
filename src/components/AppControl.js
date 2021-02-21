@@ -12,13 +12,14 @@ import { addSection, removeSection } from '../reducers/timetableSlice';
 export class AppControl extends Component {
 
     handleAddRemoveSection = () => {
+        const payload = {
+            tableKey: 'table1',
+            sectionObj: this.props.objectOnDisplay
+        };
         if (this.isSectionAdded()) {
-            
+            this.props.removeSection(payload);
         } else {
-            this.props.addSection({
-                tableKey: 'table1',
-                sectionObj: this.props.objectOnDisplay
-            });
+            this.props.addSection(payload);
         }
     }
 
