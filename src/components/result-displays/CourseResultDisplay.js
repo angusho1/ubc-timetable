@@ -6,7 +6,7 @@ import ResultDisplayItem from './ResultDisplayItem';
 export class CourseResultDisplay extends Component {
     getTitle() {
         const courseObj = this.getCourseObj();
-        const dept = courseObj.dept.subjCode;
+        const dept = courseObj.deptObj.subjCode;
         return `${dept} ${this.props.courseKey}`;
     }
 

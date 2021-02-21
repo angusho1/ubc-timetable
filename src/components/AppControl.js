@@ -16,9 +16,10 @@ export class AppControl extends Component {
         } else {
             this.props.addSection({
                 tableKey: 'table1',
-                deptObj: this.props.objectOnDisplay,
-                course: this.props.currentCourseKey,
-                section: this.props.currentSectionKey
+                sectionObj: this.props.objectOnDisplay
+                // deptObj: this.props.objectOnDisplay,
+                // course: this.props.currentCourseKey,
+                // section: this.props.currentSectionKey
             });
         }
     }
@@ -43,7 +44,7 @@ export class AppControl extends Component {
             return (<CourseResultDisplay courseObj={objectOnDisplay}
                                         courseKey={this.props.currentCourseKey} />);
         } else if (type === SearchType.SECTION) {
-            return (<SectionResultDisplay objectOnDisplay={objectOnDisplay}
+            return (<SectionResultDisplay sectionObj={objectOnDisplay}
                                         courseKey={this.props.currentCourseKey}
                                         sectionKey={this.props.currentSectionKey}
                                         handleAddRemoveSection={this.handleAddRemoveSection}

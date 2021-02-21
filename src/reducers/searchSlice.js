@@ -104,7 +104,7 @@ function searchCourseByKey(deptKey, courseKey) {
             if (!courseSearchResult) {
                 throw new Error(`${deptKey} ${courseKey} is not a valid course`);
             }
-            courseSearchResult['dept'] = copyDeptProperties({}, deptSearchResult);
+            courseSearchResult['deptObj'] = copyDeptProperties(deptSearchResult);
             return courseSearchResult;
         });
 }
@@ -116,17 +116,29 @@ function searchSectionByKey(deptKey, courseKey, sectionKey) {
             if (!sectionSearchResult) {
                 throw new Error(`${deptKey} ${courseKey} ${sectionKey} is not a valid section`);
             }
+            sectionSearchResult['courseObj'] = copyCourseProperties(courseSearchResult);
             return sectionSearchResult;
         });
 }
 
-function copyDeptProperties(courseObj, deptObj) {
+function copyDeptProperties(deptObj) {
+    let result = {};
     for (let prop in deptObj) {
         if (Object.prototype.hasOwnProperty.call(deptObj, prop) && prop !== 'courses') {
-            courseObj[prop] = deptObj[prop];
+            result[prop] = deptObj[prop];
         }
     }
-    return courseObj;
+    return result;
+}
+
+function copyCourseProperties(courseObj) {
+    let result = {};
+    for (let prop in courseObj) {
+        if (Object.prototype.hasOwnProperty.call(courseObj, prop) && prop !== 'sections') {
+            result[prop] = courseObj[prop];
+        }
+    }
+    return result;
 }
 
 /**

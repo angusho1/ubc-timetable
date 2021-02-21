@@ -26,8 +26,8 @@ export const timetableSlice = createSlice({
     initialState,
     reducers: {
         addSection: (state, action) => {
-            const { tableKey, deptObj, course, section } = action.payload;
-            addSection1(state, tableKey, deptObj, course, section);
+            const { tableKey, sectionObj } = action.payload;
+            addSection1(state, tableKey, sectionObj);
         },
         removeSection: (state, action) => {
             const { tableKey, sectionObj } = action.payload;
@@ -53,17 +53,20 @@ function initCell() {
         occupied: false,
         replaced: false,
         rowSpan: 1,
-        courseInfo: null,
+        sectionObj: null,
         label: ''
     };
 }
 
-function addSection1(state, tableKey, deptObj, course, section) {
-    if (sectionAdded(state, `${deptObj.subjCode} ${course} ${section}`)) {
+function addSection1(state, tableKey, sectionObj) {
+    const deptKey = sectionObj.courseObj.deptObj.subjCode;
+    const courseKey = sectionObj.courseObj.course;
+    const sectionKey = sectionObj.section;
+    if (sectionAdded(state, `${deptKey} ${courseKey} ${sectionKey}`)) {
         return;
     }
 
-    const sectionObj = deptObj.courses[course].sections[section];
+    // const sectionObj = deptObj.courses[course].sections[section];
     const table = state[tableKey];
     let matrix = table.matrix;
     let startTime = table.startTime;
@@ -84,21 +87,20 @@ function addSection1(state, tableKey, deptObj, course, section) {
             endTime = classEndTime;
         }
 
-        let courseInfo = { deptObj, course, section };
-        let label = getCellLabel(deptObj, course, section);
+        let label = getCellLabel(sectionObj);
 
         days.forEach(day => {
             let column = DAY_MAP[day];
             let row = (classStartTime - startTime) * 2;
 
-            updateCellsAdded(matrix, row, column, courseInfo, label, classLength);
+            updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
         });
     }
 
     state.currentTableKey = tableKey;
     table.startTime = startTime;
     table.endTime = endTime;
-    state.addedSections.push(`${deptObj.subjCode} ${course} ${section}`);
+    state.addedSections.push(`${deptKey} ${courseKey} ${sectionKey}`);
 }
 
 function removeSection1(state, tableKey, sectionObj) {
@@ -128,11 +130,11 @@ function sectionAdded(state, sectionCode) {
     return state.addedSections.includes(sectionCode);
 }
 
-function updateCellsAdded(matrix, row, column, courseInfo, label, classLength) {
+function updateCellsAdded(matrix, row, column, sectionObj, label, classLength) {
     const cell = matrix[row][column];
     cell.occupied = true;
     cell.rowSpan = classLength;
-    cell.courseInfo = courseInfo;
+    cell.sectionObj = sectionObj;
     cell.label = label;
 
     for (let i = 1; i < classLength; i++) {
@@ -151,7 +153,7 @@ function updateCellsRemoved(matrix, row, column) {
     const rowSpan = cell.rowSpan;
     cell.occupied = false;
     cell.rowSpan = 1;
-    cell.courseInfo = null;
+    cell.sectionObj = null;
     cell.label = '';
     
     for (let i = 1; i < rowSpan; i++) {
@@ -186,8 +188,7 @@ function insertRowsAtEnd(matrix, classEndTime, tableEndTime) {
     }
 }
 
-function getCellLabel(deptObj, course, section) {
-    const sectionObj = deptObj.courses[course].sections[section];
+function getCellLabel(sectionObj) {
     return `${sectionObj.sectionCode} (${sectionObj.activity})`;
 }
 

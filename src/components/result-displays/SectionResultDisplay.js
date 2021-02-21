@@ -50,11 +50,13 @@ export class SectionResultDisplay extends Component {
     }
 
     getCourseObj() {
-        return this.props.objectOnDisplay.courses[this.props.courseKey];
+        // return this.props.objectOnDisplay.courses[this.props.courseKey];
+        return this.props.sectionObj.courseObj;
     }
 
     getSectionObj() {
-        return this.getCourseObj().sections[this.props.sectionKey];
+        return this.props.sectionObj;
+        // return this.getCourseObj().sections[this.props.sectionKey];
     }
 
     render() {
