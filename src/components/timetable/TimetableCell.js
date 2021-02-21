@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { displaySection } from '../../reducers/searchSlice';
 
 export class TimetableCell extends Component {
     determineClasses() {
@@ -14,13 +16,23 @@ export class TimetableCell extends Component {
         return classList;
     }
 
+    displaySection = e => {
+        if (this.props.cellInfo.occupied) {
+            const sectionObj = this.props.cellInfo.sectionObj;
+            this.props.displaySection(sectionObj);
+        }
+    }
+
     render() {
         return (
-            <td rowSpan={this.props.cellInfo.rowSpan} className={this.determineClasses()}>
+            <td rowSpan={this.props.cellInfo.rowSpan}
+                className={this.determineClasses()}
+                onClick={this.displaySection}>
                 {this.props.cellInfo.label}
             </td>
         );
     }
 }
 
-export default TimetableCell;
+// export default TimetableCell;
+export default connect(null, { displaySection })(TimetableCell);

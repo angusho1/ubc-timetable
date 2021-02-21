@@ -42,7 +42,7 @@ export class AppControl extends Component {
     renderResultDisplay() {
         const type = this.props.typeObjectOnDisplay;
         const objectOnDisplay = this.props.objectOnDisplay;
-        if (this.props.status == 'pending' || this.props.status == 'idle') return null;
+        if (this.props.status == 'pending') return null;
         if (this.props.status == 'failed') return this.failedDisplay();
         if (type === SearchType.DEPT) {
             return (<DeptResultDisplay objectOnDisplay={objectOnDisplay} />);

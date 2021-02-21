@@ -36,7 +36,12 @@ export const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
-
+        displaySection: (state, action) => {
+            state.typeObjectOnDisplay = SearchType.SECTION;
+            state.objectOnDisplay = action.payload;
+            state.status = 'idle';
+            state.error = null;
+        }
     },
     extraReducers: {
         [searchDept.pending]: state => {
@@ -79,6 +84,7 @@ function setSuccessfulSearch(state, action) {
 function setFailedSearch(state, action) {
     state.status = 'failed';
     state.error = action.error.message;
+    state.objectOnDisplay = null;
 }
 
 function searchDeptByKey(deptKey) {
@@ -148,6 +154,6 @@ function formatKey(key) {
     return key.toUpperCase().replace(/\s+/g, '');
 }
 
-// export const { searchDept, searchCourse, searchSection } = searchSlice.actions;
+export const { displaySection } = searchSlice.actions;
 
 export default searchSlice.reducer;

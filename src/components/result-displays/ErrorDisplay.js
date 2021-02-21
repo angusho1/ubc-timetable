@@ -10,7 +10,7 @@ export class ErrorDisplay extends Component {
     }
 
     errorStyle = {
-        'font-style': 'italic'
+        fontStyle: 'italic'
     }
 
     render() {
