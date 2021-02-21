@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 

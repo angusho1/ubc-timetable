@@ -12,65 +12,25 @@ const initialState = {
 
 export const searchDept = createAsyncThunk('search/searchDept', 
     async (searchData) => {
-        const dept = searchData.dept;
-        const data = await fetchData();
-        const deptKey = formatKey(dept);
-        const deptSearchResult = data.departments[deptKey];
-        if (!deptSearchResult) {
-            throw new Error(`${deptKey} is not a valid department`);
-        }
-        return deptSearchResult;
+        const deptKey = formatKey(searchData.dept);
+        return searchDeptByKey(deptKey);
     }
 );
 
 export const searchCourse = createAsyncThunk('search/searchCourse', 
     async (searchData) => {
-        const dept = searchData.dept;
-        const course = searchData.course;
-        const data = await fetchData();
-        const deptKey = formatKey(dept);
-        const courseKey = formatKey(course);
-
-        const deptSearchResult = data.departments[deptKey];
-        if (!deptSearchResult) {
-            throw new Error(`${deptKey} is not a valid department`);
-        }
-
-        const courseSearchResult = deptSearchResult.courses[courseKey];
-        if (!courseSearchResult) {
-            throw new Error(`${deptKey} ${courseKey} is not a valid course`);
-        }
-
-        return courseSearchResult;
+        const deptKey = formatKey(searchData.dept);
+        const courseKey = formatKey(searchData.course);
+        return searchCourseByKey(deptKey, courseKey);
     }
 );
 
 export const searchSection = createAsyncThunk('search/searchSection', 
     async (searchData) => {
-        const dept = searchData.dept;
-        const course = searchData.course;
-        const section = searchData.section;
-        const data = await fetchData();
-        const deptKey = formatKey(dept);
-        const courseKey = formatKey(course);
-        const sectionKey = formatKey(section);
-
-        const deptSearchResult = data.departments[deptKey];
-        if (!deptSearchResult) {
-            throw new Error(`${dept} is not a valid department`);
-        }
-
-        const courseSearchResult = deptSearchResult.courses[courseKey];
-        if (!courseSearchResult) {
-            throw new Error(`${dept} ${course} is not a valid course`);
-        }
-
-        const sectionSearchResult = courseSearchResult.sections[sectionKey];
-        if (!sectionSearchResult) {
-            throw new Error(`${dept} ${course} ${section} is not a valid section`);
-        }
-
-        return sectionSearchResult;
+        const deptKey = formatKey(searchData.dept);
+        const courseKey = formatKey(searchData.course);
+        const sectionKey = formatKey(searchData.section);
+        return searchSectionByKey(deptKey, courseKey, sectionKey);
     }
 );
 
@@ -81,53 +41,83 @@ export const searchSlice = createSlice({
 
     },
     extraReducers: {
-        [searchDept.pending]: (state, action) => {
-            state.status = 'pending';
-            state.typeObjectOnDisplay = SearchType.DEPT;
+        [searchDept.pending]: state => {
+            setPendingSearch(state, SearchType.DEPT);
         },
         [searchDept.fulfilled]: (state, action) => {
-            console.log(action.payload);
-            state.status = 'completed';
-            state.objectOnDisplay = action.payload;
+            setSuccessfulSearch(state, action);
         },
-        [searchDept.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message;
-        },
+        [searchDept.rejected]: setFailedSearch,
 
-        [searchCourse.pending]: (state, action) => {
-            state.status = 'pending';
-            state.typeObjectOnDisplay = SearchType.COURSE;
+        [searchCourse.pending]: state => {
+            setPendingSearch(state, SearchType.COURSE);
         },
         [searchCourse.fulfilled]: (state, action) => {
-            console.log(action.payload);
-            state.status = 'completed';
-            state.objectOnDisplay = action.payload.response;
+            setSuccessfulSearch(state, action);
             state.currentCourseKey = action.payload.course;
         },
-        [searchCourse.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message;
-        },
+        [searchCourse.rejected]: setFailedSearch,
 
-        [searchSection.pending]: (state, action) => {
-            state.status = 'pending';
-            state.typeObjectOnDisplay = SearchType.SECTION;
+        [searchSection.pending]: state => {
+            setPendingSearch(state, SearchType.SECTION);
         },
         [searchSection.fulfilled]: (state, action) => {
-            console.log(action.payload);
-            state.status = 'completed';
-            state.objectOnDisplay = action.payload.response;
+            setSuccessfulSearch(state, action);
             state.currentCourseKey = action.payload.course;
             state.currentSectionKey = action.payload.section;
         },
-        [searchSection.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message;
-        },
+        [searchSection.rejected]: setFailedSearch
     }
 });
 
+
+function setPendingSearch(state, type) {
+    state.status = 'pending';
+    state.typeObjectOnDisplay = type;
+}
+
+function setSuccessfulSearch(state, action) {
+    state.status = 'completed';
+    state.objectOnDisplay = action.payload.response;
+}
+
+function setFailedSearch(state, action) {
+    state.status = 'failed';
+    state.error = action.error.message;
+}
+
+function searchDeptByKey(deptKey) {
+    return fetchData()
+        .then(data => {
+            const deptSearchResult = data.departments[deptKey];
+            if (!deptSearchResult) {
+                throw new Error(`${deptKey} is not a valid department`);
+            }
+            return deptSearchResult;
+        });
+}
+
+function searchCourseByKey(deptKey, courseKey) {
+    return  searchDeptByKey(deptKey)
+        .then(deptSearchResult => {
+            const courseSearchResult = deptSearchResult.courses[courseKey];
+            if (!courseSearchResult) {
+                throw new Error(`${deptKey} ${courseKey} is not a valid course`);
+            }
+            return courseSearchResult;
+        });
+}
+
+function searchSectionByKey(deptKey, courseKey, sectionKey) {
+    return searchCourseByKey(deptKey, courseKey)
+        .then(courseSearchResult => {
+            const sectionSearchResult = courseSearchResult.sections[sectionKey];
+            if (!sectionSearchResult) {
+                throw new Error(`${deptKey} ${courseKey} ${sectionKey} is not a valid section`);
+            }
+            return sectionSearchResult;
+        });
+}
 
 /**
  * @todo move API calls into a service
