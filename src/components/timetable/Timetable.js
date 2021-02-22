@@ -9,8 +9,8 @@ export class Timetable extends Component {
 
     renderTimetableRows() {
         let t = 0;
-        const startTime = this.props.startTime;
-        const endTime = this.props.endTime;
+        const startTime = this.getStartTime();
+        const endTime = this.getEndTime();
         const numRows = (endTime - startTime) * 2;
 
         let tableRows = [];
@@ -24,24 +24,32 @@ export class Timetable extends Component {
                 t++;
             }
             tableRows.push(
-                <TimetableRow key={timeSlot} cells={this.props.matrix[i]} timeSlot={timeSlot} days={this.props.days}/>
+                <TimetableRow key={timeSlot} cells={this.getMatrix()[i]} timeSlot={timeSlot} days={this.props.days}/>
             );
         }
 
         return tableRows;
     }
 
-    determineClasses() {
-        let classList = 'timetable';
-        if (!this.props.visible) {
-            classList = `${classList} invisible`;
-        }
-        return classList;
+    getStartTime() {
+        return this.props.table.startTime;
+    }
+
+    getEndTime() {
+        return this.props.table.endTime;
+    }
+
+    getTerm() {
+        return this.props.table.term;
+    }
+
+    getMatrix() {
+        return this.props.table.matrix;
     }
 
     render() {
         return (
-            <table className={this.determineClasses()}>
+            <table className="timetable">
                 <thead>
                     <tr>
                         <th width="50px" className="day-header"/>

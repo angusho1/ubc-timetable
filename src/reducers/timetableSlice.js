@@ -7,18 +7,22 @@ const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 
 const initialState = {
     currentTableKey: 'table1',
     addedSections: [],
-    table1: {
-        startTime: DEFAULT_STARTTIME,
-        endTime: DEFAULT_ENDTIME,
-        term: '2020 W1',
-        matrix: initMatrix()
-    },
-    table2: {
-        startTime: DEFAULT_STARTTIME,
-        endTime: DEFAULT_ENDTIME,
-        term: '2020 W2',
-        matrix: initMatrix()
-    }
+    tables: [
+        {
+            tableKey: 'table1',
+            startTime: DEFAULT_STARTTIME,
+            endTime: DEFAULT_ENDTIME,
+            term: '2020 W1',
+            matrix: initMatrix()
+        },
+        {
+            tableKey: 'table2',
+            startTime: DEFAULT_STARTTIME,
+            endTime: DEFAULT_ENDTIME,
+            term: '2020 W2',
+            matrix: initMatrix()
+        }
+    ]
 }
 
 export const timetableSlice = createSlice({
@@ -32,6 +36,10 @@ export const timetableSlice = createSlice({
         removeSection: (state, action) => {
             const { tableKey, sectionObj } = action.payload;
             removeSection1(state, tableKey, sectionObj);
+        },
+        switchTable: (state, action) => {
+            const tableKey = action.payload.tableKey;
+            state.currentTableKey = tableKey;
         }
     }
 });
@@ -58,6 +66,14 @@ function initCell() {
     };
 }
 
+function findTable(state, tableKey) {
+    const table = state.tables.find(table => table.tableKey === tableKey);
+    if (table === null) {
+        throw new Error(`Table of key '${tableKey}' not found`);
+    }
+    return table;
+}
+
 function addSection1(state, tableKey, sectionObj) {
     const deptKey = sectionObj.courseObj.deptObj.subjCode;
     const courseKey = sectionObj.courseObj.course;
@@ -67,7 +83,7 @@ function addSection1(state, tableKey, sectionObj) {
         throw new Error(`Section '${sectionCode}' is already in timetable '${tableKey}'`);
     }
 
-    const table = state[tableKey];
+    const table = findTable(state, tableKey);
     let matrix = table.matrix;
     let startTime = table.startTime;
     let endTime = table.endTime;
@@ -108,7 +124,7 @@ function removeSection1(state, tableKey, sectionObj) {
         return;
     }
 
-    const table = state[tableKey];
+    const table = findTable(state, tableKey);
     let matrix = table.matrix;
 
     for (let classObj of sectionObj.classes) {
@@ -208,6 +224,6 @@ function convertTimeToNumber(str) {
     return hours + minutes;
 }
 
-export const { addSection, removeSection } = timetableSlice.actions;
+export const { addSection, removeSection, switchTable } = timetableSlice.actions;
 
 export default timetableSlice.reducer;

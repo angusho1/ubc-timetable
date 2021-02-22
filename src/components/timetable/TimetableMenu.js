@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 
 export class TimetableMenu extends Component {
+    renderTimetableButtons() {
+        return this.props.timetables.map(table => {
+            const tableKey = table.tableKey;
+            const term = table.term;
+            return (
+                <button className="timetable-menu" 
+                        // id="term-1" 
+                        onClick={(e) => this.switchTable(tableKey)}>
+                        {term}
+                </button>
+            );
+        });
+    }
+
+    switchTable = tableKey => {
+        this.props.switchTable({ tableKey });
+    }
+
     render() {
         return (
             <div>
-                <button className="timetable-menu" 
-                        id="term-1" 
-                        onClick={() => this.props.switchTable('table1')}>Term 1
-                </button>
-                <button className="timetable-menu" 
-                        id="term-2" 
-                        onClick={() => this.props.switchTable('table2')}>Term 2
-                </button>
+                {this.renderTimetableButtons()}
             </div>
         )
     }

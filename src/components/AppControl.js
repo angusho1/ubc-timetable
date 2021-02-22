@@ -13,7 +13,7 @@ export class AppControl extends Component {
 
     handleAddRemoveSection = () => {
         const payload = {
-            tableKey: 'table1',
+            tableKey: this.props.currentTableKey, //  need to change
             sectionObj: this.props.objectOnDisplay
         };
         if (this.isSectionAdded()) {
@@ -83,7 +83,8 @@ const mapState = state => ({
     typeObjectOnDisplay: state.search.typeObjectOnDisplay,
     status: state.search.status,
     error: state.search.error,
-    addedSections: state.timetable.addedSections
+    addedSections: state.timetable.addedSections,
+    currentTableKey: state.timetable.currentTableKey
 });
 
 export default connect(mapState, { addSection, removeSection })(AppControl);
