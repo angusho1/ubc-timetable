@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem';
+import { openMap } from '../../reducers/mapSlice';
 
 export class SectionResultDisplay extends Component {
     getTitle() {
@@ -24,7 +26,7 @@ export class SectionResultDisplay extends Component {
             <p>Credits: <b>{courseObj.credits}</b></p>
             <p>Total Seats Remaining: <b>{sectionObj.totalSeatsRem}</b></p>
             { this.renderAddRemoveButton() }
-            { classObjects.map(this.renderClassDisplay) }
+            { classObjects.map(this.renderClassDisplay.bind(this)) }
         </div>);
     }
 
@@ -66,14 +68,23 @@ export class SectionResultDisplay extends Component {
         );
     }
 
+    openLocationMap(building) {
+        this.props.openMap({ building });
+    }
+
     renderClassDisplay(classObj) {
         const dayString = /\S/.test(classObj.days) ? classObj.days.trim().split(' ').join(' / ') : 'No Schedule';
 
-        const locationInfo = /\S/.test(classObj.location.building) && /\S/.test(classObj.location.room) ? 
+        const building = classObj.location.building;
+        const locationInfo = /\S/.test(building) && /\S/.test(classObj.location.room) ? 
             (<div>
-                Building: <b> {classObj.location.building}</b>
+                Building: <b> {building}</b>
                 <br/>
                 Room: <b> {classObj.location.room}</b>
+                <button className="btn small-btn" 
+                        onClick={this.openLocationMap.bind(this, building)}>
+                    Open Map
+                </button>
             </div>) : null;
 
         const termStyle = { float: 'right', fontStyle: 'italic'};
@@ -159,4 +170,5 @@ function lowerLetters(name) {
     return converted.join(' ');
 }
 
-export default SectionResultDisplay;
+export default connect(null, { openMap })(SectionResultDisplay);
+// export default SectionResultDisplay;
