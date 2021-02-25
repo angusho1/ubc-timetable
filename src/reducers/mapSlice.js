@@ -11,7 +11,12 @@ export const openMap = createAsyncThunk('map/openMap',
     async (data) => {
         const building = data.building;
         const address = await fetchAddress(building);
-        return fetchLocationData(address);
+        const geocodingRes = await fetchLocationData(address);
+        const location = geocodingRes.results[0].geometry.location;
+        const addressComponents = geocodingRes.results[0].address_components;
+        return {
+            addressComponents, location
+        };
     }
 )
 
@@ -23,29 +28,29 @@ export const mapSlice = createSlice({
     },
     extraReducers: {
         [openMap.pending]: state => {
-            
+            state.status = 'pending';
         },
         [openMap.fulfilled]: (state, action) => {
             state.res = action.payload;
         },
-        [openMap.rejected]: state => {
-            console.log('Failed');
+        [openMap.rejected]: (state, action) => {
+            state.status = action.error.message;
         }
     }
 });
 
 function fetchAddress(building) {
     return fetch('/buildings.json')
-        .then(res => {
-            const buildingData = res.json();
-            return buildingData[building];
+        .then(res => res.json())
+        .then(buildingData => {
+            console.log(buildingData);
+            return `${buildingData[building].address}, Vancouver, BC`;
         });
 }
 
 function fetchLocationData(address) {
-    console.log(process.env.NODE_ENV);
     const base = 'https://maps.googleapis.com/maps/api/geocode/json';
-    const key = process.env.NODE_ENV.GEOCODING_KEY;
+    const key = process.env.REACT_APP_GEOCODING_KEY;
     const url = `${base}?key=${key}&address="${address}"`;
     return fetch(url)
         .then(res => res.json());

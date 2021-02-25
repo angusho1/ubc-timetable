@@ -6,7 +6,7 @@ export class TimetableMenu extends Component {
             const tableKey = table.tableKey;
             const term = table.term;
             return (
-                <button className="timetable-menu" 
+                <button className="timetable-menu-btn" 
                         key={tableKey}
                         onClick={(e) => this.switchTable(tableKey)}>
                         {term}
@@ -21,7 +21,7 @@ export class TimetableMenu extends Component {
 
     render() {
         return (
-            <div>
+            <div className="timetable-menu">
                 {this.renderTimetableButtons()}
             </div>
         )

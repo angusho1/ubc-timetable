@@ -72,7 +72,7 @@ export class SectionResultDisplay extends Component {
         this.props.openMap({ building });
     }
 
-    renderClassDisplay(classObj) {
+    renderClassDisplay(classObj, index) {
         const dayString = /\S/.test(classObj.days) ? classObj.days.trim().split(' ').join(' / ') : 'No Schedule';
 
         const building = classObj.location.building;
@@ -90,7 +90,7 @@ export class SectionResultDisplay extends Component {
         const termStyle = { float: 'right', fontStyle: 'italic'};
 
         return (
-            <div className="class-div">
+            <div className="class-div" key={index}>
                 <b>{dayString}</b>
                 <span style={termStyle}>TERM {classObj.term}</span>
                 <br/>
@@ -149,7 +149,6 @@ function convertName(name) {
     }
 
     let result = `${firstName} ${lastName}`;
-    console.log(result);
     return result;
 }
 
