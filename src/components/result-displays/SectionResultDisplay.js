@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
-import ResultDisplayItem from './ResultDisplayItem';
+// import ResultDisplayItem from './ResultDisplayItem';
 import { openMap } from '../../reducers/mapSlice';
 
 export class SectionResultDisplay extends Component {
@@ -131,7 +131,7 @@ export class SectionResultDisplay extends Component {
  * @returns {string}  the converted name
 */
 function convertName(name) {
-    if (name == 'TBA') return name;
+    if (name === 'TBA') return name;
     let arr = name.split(', ');
     let lastName = arr[0];
     let firstName = arr[1];

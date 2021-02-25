@@ -7,7 +7,7 @@ export class TimetableMenu extends Component {
             const term = table.term;
             return (
                 <button className="timetable-menu" 
-                        // id="term-1" 
+                        key={tableKey}
                         onClick={(e) => this.switchTable(tableKey)}>
                         {term}
                 </button>

@@ -104,10 +104,11 @@ function addSection1(state, tableKey, sectionObj) {
         }
 
         let label = getCellLabel(sectionObj);
+        let start = startTime;
 
         days.forEach(day => {
             let column = DAY_MAP[day];
-            let row = (classStartTime - startTime) * 2;
+            let row = (classStartTime - start) * 2;
 
             updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
         });
