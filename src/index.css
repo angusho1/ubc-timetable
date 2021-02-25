@@ -254,7 +254,7 @@ td {
 
 /* The Modal (background) */
 .pop-up {
-  display: none; /* Hidden by default */
+  display: inline-block;
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;

@@ -31,9 +31,11 @@ export const mapSlice = createSlice({
             state.status = 'pending';
         },
         [openMap.fulfilled]: (state, action) => {
+            state.status = 'successful';
             state.res = action.payload;
         },
         [openMap.rejected]: (state, action) => {
+            state.status = 'failed';
             state.status = action.error.message;
         }
     }
