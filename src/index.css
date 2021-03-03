@@ -151,8 +151,8 @@ input[type='text']:focus {
   color: #d8a838;
 }
 
-.btn:focus {
-  border: none;
+button:focus {
+  outline: none;
 }
 
 .timetable {
@@ -194,10 +194,34 @@ td {
 }
 
 .timetable-menu {
-
+  background: #ffffff88;
+  margin-bottom: 0.5vw;
+  border-radius: 5px;
 }
 
 .timetable-menu-btn {
+  font-family: 'Open Sans';
+  cursor: pointer;
+  padding: 10px 10px;
+  border: none;
+  /* border-radius: 5px; */
+  font-size: 16px;
+}
+
+.timetable-menu-btn:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+.timetable-menu-btn:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+.timetable-menu-btn:hover {
+  background-color: #97D4E966;
+}
+
+.timetable-menu-btn.active {
+  background-color: #97D4E988;
 }
 
 /* #timetable tr td:nth-child(even), #timetable th tr .day-header:nth-child(even)  {
