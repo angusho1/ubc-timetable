@@ -6,6 +6,14 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
 
+window.addEventListener('load',function() {
+  let mapsScript = document.createElement('script');
+  mapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_MAPS_KEY}`);
+  mapsScript.defer = true;
+  mapsScript.setAttribute('async', '');
+  document.body.appendChild(mapsScript);
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

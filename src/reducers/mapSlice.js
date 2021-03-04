@@ -2,6 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     activeMapLocations: [],
+    addressComponents: null,
+    coords: null,
+    building: null,
+    address: null,
     res: null,
     status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
@@ -15,7 +19,7 @@ export const openMap = createAsyncThunk('map/openMap',
         const location = geocodingRes.results[0].geometry.location;
         const addressComponents = geocodingRes.results[0].address_components;
         return {
-            addressComponents, location
+            addressComponents, location, address, building
         };
     }
 )
@@ -32,7 +36,10 @@ export const mapSlice = createSlice({
         },
         [openMap.fulfilled]: (state, action) => {
             state.status = 'successful';
-            state.res = action.payload;
+            state.addressComponents = action.payload.addressComponents;
+            state.coords = action.payload.location;
+            state.building = action.payload.building;
+            state.address = action.payload.address;
         },
         [openMap.rejected]: (state, action) => {
             state.status = 'failed';

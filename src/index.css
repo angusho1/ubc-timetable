@@ -146,6 +146,10 @@ input[type='text']:focus {
   font-size: 16px;
 }
 
+#search-btn:focus {
+  outline: none;
+}
+
 .btn:hover {
   background-color: #002d5c;
   color: #d8a838;

@@ -17,15 +17,15 @@ export class PopUp extends Component {
             <div className="pop-up">
                 <div className="modal-content">
                     <div id="modal-content-top">
-                        <span className="h3-style" style="margin-top: 25px">
+                        <span className="h3-style" style={{marginTop: '25px'}}>
                             {this.props.header}
                         </span>
                         <span className="close-btn" onClick={this.closeModal}>x</span>
                     </div>
                     <div id="map-container">
-                        <div className="map">
+                        {/* <div className="map"> */}
                             {this.props.children}
-                        </div>
+                        {/* </div> */}
                     </div>
                 </div>
             </div>

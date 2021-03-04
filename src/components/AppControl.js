@@ -6,6 +6,7 @@ import DeptResultDisplay from './result-displays/DeptResultDisplay';
 import CourseResultDisplay from './result-displays/CourseResultDisplay';
 import SectionResultDisplay from './result-displays/SectionResultDisplay';
 import ErrorDisplay from './result-displays/ErrorDisplay';
+import SinglePointMap from './popup-displays/map/SinglePointMap';
 import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
 
@@ -73,6 +74,7 @@ export class AppControl extends Component {
                     {this.renderResultDisplay()}
                 </div>
                 <TimetableControl />
+                <SinglePointMap />
             </div>
         )
     }
