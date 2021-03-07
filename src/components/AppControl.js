@@ -81,13 +81,22 @@ export class AppControl extends Component {
     }
 }
 
+function selectAddedSections(state) {
+    const currentSession = state.search.currentSession;
+    return state.timetable.sessions.find(session => {
+        return session.year === currentSession.year &&
+         session.season === currentSession.season;
+    }).addedSections;
+}
+
 const mapState = state => ({
     objectOnDisplay: state.search.objectOnDisplay,
     typeObjectOnDisplay: state.search.typeObjectOnDisplay,
+    currentSession: state.search.currentSession,
     status: state.search.status,
     error: state.search.error,
-    addedSections: state.timetable.addedSections,
-    currentTableKey: state.timetable.currentTableKey
+    currentTableKey: state.timetable.currentTableKey,
+    addedSections: selectAddedSections(state)
 });
 
 export default connect(mapState, { addSection, removeSection })(AppControl);

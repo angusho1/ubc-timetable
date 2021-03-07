@@ -4,6 +4,10 @@ import { SearchType } from '../data/SearchType';
 const initialState = {
     objectOnDisplay: null,
     typeObjectOnDisplay: null,
+    currentSession: {
+        year: 2020,     // TODO: Change hardcode
+        season: 'W'
+    },
     status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
 }

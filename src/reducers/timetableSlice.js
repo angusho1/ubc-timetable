@@ -9,7 +9,13 @@ const DEFAULT_SESSION = new AcademicSession(DEFAULT_YEAR, 'W');
 
 const initialState = {
     currentTableKey: 'table1',
-    addedSections: [],
+    sessions: [
+        {
+            year: 2020,
+            season: 'W',
+            addedSections: []
+        }
+    ],
     tables: [
         {
             tableKey: 'table1',
@@ -83,11 +89,13 @@ function addSectionToTables(state, sectionObj) {
     const courseKey = sectionObj.courseObj.course;
     const sectionKey = sectionObj.section;
     const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`;
+
     const sessionObj = sectionObj.session;
     const academicYear = new AcademicYear(sessionObj.year);
     const session = new AcademicSession(academicYear, sessionObj.season);
+    const stateSession = getStateSession(state, session);
 
-    if (sectionAdded(state, sectionCode)) {
+    if (sectionAdded(stateSession, sectionCode)) {
         throw new Error(`Cannot add - Section '${sectionCode}' is already in session '${session.getString()}'`);
     }
 
@@ -132,7 +140,7 @@ function addSectionToTables(state, sectionObj) {
         table.endTime = endTime;
     }
 
-    state.addedSections.push(`${deptKey} ${courseKey} ${sectionKey}`);
+    stateSession.addedSections.push(`${deptKey} ${courseKey} ${sectionKey}`);
 }
 
 function removeSection1(state, sectionObj) {
@@ -143,8 +151,9 @@ function removeSection1(state, sectionObj) {
     const sessionObj = sectionObj.session;
     const academicYear = new AcademicYear(sessionObj.year);
     const session = new AcademicSession(academicYear, sessionObj.season);
+    const stateSession = getStateSession(state, session);
 
-    if (!sectionAdded(state, sectionObj.sectionCode)) {
+    if (!sectionAdded(stateSession, sectionObj.sectionCode)) {
         throw new Error(`Cannot remove - Section '${sectionCode}' is not session '${session.getString()}'`);
     }
 
@@ -170,11 +179,11 @@ function removeSection1(state, sectionObj) {
         state.currentTableKey = table.tableKey;
     }
 
-    state.addedSections.splice(state.addedSections.indexOf(sectionObj.sectionCode), 1);
+    stateSession.addedSections.splice(stateSession.addedSections.indexOf(sectionObj.sectionCode), 1);
 }
 
-function sectionAdded(state, sectionCode) {
-    return state.addedSections.includes(sectionCode);
+function sectionAdded(stateSession, sectionCode) {
+    return stateSession.addedSections.includes(sectionCode);
 }
 
 function updateCellsAdded(matrix, row, column, sectionObj, label, classLength) {
@@ -233,6 +242,12 @@ function insertRowsAtEnd(matrix, classEndTime, tableEndTime) {
             matrix[lastIndex][j] = initCell();
         }
     }
+}
+
+function getStateSession(state, session) {
+    return state.sessions.find(stateSession => {
+        return `${stateSession.year}${stateSession.season}` === session.getString();
+    });
 }
 
 function getTerms(sectionObj, session) {
