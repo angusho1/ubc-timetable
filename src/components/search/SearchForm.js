@@ -70,13 +70,14 @@ export class SearchForm extends Component {
     initSearch(dept, course, section) {
         const courseEmpty = EMPTY_REGEX.test(course);
         const sectionEmpty = EMPTY_REGEX.test(section);
+        const session = { year: 2020, season: 'W' } // TODO: Removed hardcode
 
         if (!sectionEmpty) {
-            this.props.searchSection({ dept, course, section });
+            this.props.searchSection({ dept, course, section, session });
         } else if (!courseEmpty) {
-            this.props.searchCourse({ dept, course })
+            this.props.searchCourse({ dept, course, session });
         } else {
-            this.props.searchDept({ dept });
+            this.props.searchDept({ dept, session });
         }
     }
 

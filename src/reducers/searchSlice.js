@@ -11,6 +11,7 @@ const initialState = {
 export const searchDept = createAsyncThunk('search/searchDept', 
     async (searchData) => {
         const deptKey = formatKey(searchData.dept);
+        const session = searchData.session;
         return searchDeptByKey(deptKey);
     }
 );
@@ -19,7 +20,8 @@ export const searchCourse = createAsyncThunk('search/searchCourse',
     async (searchData) => {
         const deptKey = formatKey(searchData.dept);
         const courseKey = formatKey(searchData.course);
-        return searchCourseByKey(deptKey, courseKey);
+        const session = searchData.session;
+        return searchCourseByKey(deptKey, courseKey, session);
     }
 );
 
@@ -28,7 +30,8 @@ export const searchSection = createAsyncThunk('search/searchSection',
         const deptKey = formatKey(searchData.dept);
         const courseKey = formatKey(searchData.course);
         const sectionKey = formatKey(searchData.section);
-        return searchSectionByKey(deptKey, courseKey, sectionKey);
+        const session = searchData.session;
+        return searchSectionByKey(deptKey, courseKey, sectionKey, session);
     }
 );
 
@@ -87,30 +90,33 @@ function setFailedSearch(state, action) {
     state.objectOnDisplay = null;
 }
 
-function searchDeptByKey(deptKey) {
+// TODO: Use session in actual search
+function searchDeptByKey(deptKey, session) {
     return fetchData()
         .then(data => {
             const deptSearchResult = data.departments[deptKey];
             if (!deptSearchResult) {
                 throw new Error(`'${deptKey}' is not a valid department`);
             }
+            deptSearchResult['session'] = session;
             return deptSearchResult;
         });
 }
 
-function searchCourseByKey(deptKey, courseKey) {
-    return  searchDeptByKey(deptKey)
+function searchCourseByKey(deptKey, courseKey, session) {
+    return searchDeptByKey(deptKey)
         .then(deptSearchResult => {
             const courseSearchResult = deptSearchResult.courses[courseKey];
             if (!courseSearchResult) {
                 throw new Error(`'${deptKey} ${courseKey}' is not a valid course`);
             }
             courseSearchResult['deptObj'] = copyDeptProperties(deptSearchResult);
+            courseSearchResult['session'] = session;
             return courseSearchResult;
         });
 }
 
-function searchSectionByKey(deptKey, courseKey, sectionKey) {
+function searchSectionByKey(deptKey, courseKey, sectionKey, session) {
     return searchCourseByKey(deptKey, courseKey)
         .then(courseSearchResult => {
             const sectionSearchResult = courseSearchResult.sections[sectionKey];
@@ -118,6 +124,7 @@ function searchSectionByKey(deptKey, courseKey, sectionKey) {
                 throw new Error(`'${deptKey} ${courseKey} ${sectionKey}' is not a valid section`);
             }
             sectionSearchResult['courseObj'] = copyCourseProperties(courseSearchResult);
+            sectionSearchResult['session'] = session;
             return sectionSearchResult;
         });
 }

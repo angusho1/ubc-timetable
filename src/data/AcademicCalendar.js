@@ -43,6 +43,10 @@ export class AcademicSession {
         return this.season;
     }
 
+    getString() {
+        return `${this.academicYear.getYear1()}${this.season}`;
+    }
+
     getNextAcademicSession() {
         if (this.season === 'W') {
             return new AcademicSession(this.academicYear.getNextAcademicYear(), 'S');
@@ -62,19 +66,26 @@ export class AcademicSession {
 
 export class AcademicTerm {
     constructor(academicSession, termNumber) {
+        if (typeof termNumber === 'string' || termNumber instanceof String) {
+            termNumber = parseInt(termNumber);
+        }
         this.academicSession = academicSession;
         if (termNumber !== 1 && termNumber !== 2) {
-            throw new Error(`Invalid term number of ${this.number}`);
+            throw new Error(`Invalid term number of ${termNumber}`);
         } else {
             this.number = termNumber;
         }
+    }
+
+    getTermNumber() {
+        return this.number;
     }
 
     getTermString() {
         const academicSession = this.academicSession;
         const academicYear = academicSession.getAcademicYear();
 
-        return `${academicYear.getYear1()} ${academicSession.getseason()}${this.number}`;
+        return `${academicYear.getYear1()} ${academicSession.getSeason()}${this.number}`;
     }
 
     getCurrentYear() {

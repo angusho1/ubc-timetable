@@ -1,8 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AcademicSession, AcademicTerm, AcademicYear } from '../data/AcademicCalendar';
 
 const DEFAULT_STARTTIME = 9;
 const DEFAULT_ENDTIME = 18;
 const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 5, 'Sat' : 6};
+const DEFAULT_YEAR = 2020;
+const DEFAULT_SESSION = new AcademicSession(DEFAULT_YEAR, 'W');
 
 const initialState = {
     currentTableKey: 'table1',
@@ -30,12 +33,12 @@ export const timetableSlice = createSlice({
     initialState,
     reducers: {
         addSection: (state, action) => {
-            const { tableKey, sectionObj } = action.payload;
-            addSection1(state, tableKey, sectionObj);
+            const { sectionObj } = action.payload;
+            addSectionToTables(state, sectionObj);
         },
         removeSection: (state, action) => {
-            const { tableKey, sectionObj } = action.payload;
-            removeSection1(state, tableKey, sectionObj);
+            const { sectionObj } = action.payload;
+            removeSection1(state, sectionObj);
         },
         switchTable: (state, action) => {
             const tableKey = action.payload.tableKey;
@@ -66,80 +69,107 @@ function initCell() {
     };
 }
 
-function findTable(state, tableKey) {
-    const table = state.tables.find(table => table.tableKey === tableKey);
+function getTableByKey(state, termKey) {
+    const table = state.tables.find(table => //table.tableKey === tableKey &&
+                                            table.term === termKey);
     if (table === null) {
-        throw new Error(`Table of key '${tableKey}' not found`);
+        throw new Error(`Table of term '${termKey}' not found`);
     }
     return table;
 }
 
-function addSection1(state, tableKey, sectionObj) {
+function addSectionToTables(state, sectionObj) {
     const deptKey = sectionObj.courseObj.deptObj.subjCode;
     const courseKey = sectionObj.courseObj.course;
     const sectionKey = sectionObj.section;
-    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`
+    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`;
+    const sessionObj = sectionObj.session;
+    const academicYear = new AcademicYear(sessionObj.year);
+    const session = new AcademicSession(academicYear, sessionObj.season);
+
     if (sectionAdded(state, sectionCode)) {
-        throw new Error(`Section '${sectionCode}' is already in timetable '${tableKey}'`);
+        throw new Error(`Cannot add - Section '${sectionCode}' is already in session '${session.getString()}'`);
     }
 
-    const table = findTable(state, tableKey);
-    let matrix = table.matrix;
-    let startTime = table.startTime;
-    let endTime = table.endTime;
+    const terms = getTerms(sectionObj, session);
 
-    for (let classObj of sectionObj.classes) {
-        const classStartTime = convertTimeToNumber(classObj.start);
-        const classEndTime = convertTimeToNumber(classObj.end);
-        const classLength = (classEndTime - classStartTime) * 2;
-        const days = classObj.days.trim().split(' ');
+    for (let term of terms) {
+        let classObjs = sectionObj.classes.filter(classObj => classObj.term === term.getTermNumber().toString());
 
-        if (classStartTime < startTime) {
-            insertRowsAtStart(matrix, classStartTime, startTime);
-            startTime = classStartTime;
+        const table = getTableByKey(state, term.getTermString());
+        let matrix = table.matrix;
+        let startTime = table.startTime;
+        let endTime = table.endTime;
+
+        for (let classObj of classObjs) {
+            const classStartTime = convertTimeToNumber(classObj.start);
+            const classEndTime = convertTimeToNumber(classObj.end);
+            const classLength = (classEndTime - classStartTime) * 2;
+            const days = classObj.days.trim().split(' ');
+
+            if (classStartTime < startTime) {
+                insertRowsAtStart(matrix, classStartTime, startTime);
+                startTime = classStartTime;
+            }
+            if (classEndTime > endTime) {
+                insertRowsAtEnd(matrix, classEndTime, endTime);
+                endTime = classEndTime;
+            }
+
+            let label = getCellLabel(sectionObj);
+            let start = startTime;
+
+            days.forEach(day => {
+                let column = DAY_MAP[day];
+                let row = (classStartTime - start) * 2;
+
+                updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
+            });
         }
-        if (classEndTime > endTime) {
-            insertRowsAtEnd(matrix, classEndTime, endTime);
-            endTime = classEndTime;
-        }
 
-        let label = getCellLabel(sectionObj);
-        let start = startTime;
-
-        days.forEach(day => {
-            let column = DAY_MAP[day];
-            let row = (classStartTime - start) * 2;
-
-            updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
-        });
+        state.currentTableKey = table.tableKey;
+        table.startTime = startTime;
+        table.endTime = endTime;
     }
 
-    state.currentTableKey = tableKey;
-    table.startTime = startTime;
-    table.endTime = endTime;
     state.addedSections.push(`${deptKey} ${courseKey} ${sectionKey}`);
 }
 
-function removeSection1(state, tableKey, sectionObj) {
+function removeSection1(state, sectionObj) {
+    const deptKey = sectionObj.courseObj.deptObj.subjCode;
+    const courseKey = sectionObj.courseObj.course;
+    const sectionKey = sectionObj.section;
+    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`;
+    const sessionObj = sectionObj.session;
+    const academicYear = new AcademicYear(sessionObj.year);
+    const session = new AcademicSession(academicYear, sessionObj.season);
+
     if (!sectionAdded(state, sectionObj.sectionCode)) {
-        return;
+        throw new Error(`Cannot remove - Section '${sectionCode}' is not session '${session.getString()}'`);
     }
 
-    const table = findTable(state, tableKey);
-    let matrix = table.matrix;
+    const terms = getTerms(sectionObj, session);
 
-    for (let classObj of sectionObj.classes) {
-        const classStartTime = convertTimeToNumber(classObj.start);
-        const days = classObj.days.trim().split(' ');
+    for (let term of terms) {
+        let classObjs = sectionObj.classes.filter(classObj => classObj.term === term.getTermNumber().toString());
 
-        days.forEach(day => {
-            let column = DAY_MAP[day];
-            let row = (classStartTime - table.startTime) * 2;
-            updateCellsRemoved(matrix, row, column);
-        });
+        const table = getTableByKey(state, term.getTermString());
+        let matrix = table.matrix;
+
+        for (let classObj of classObjs) {
+            const classStartTime = convertTimeToNumber(classObj.start);
+            const days = classObj.days.trim().split(' ');
+
+            days.forEach(day => {
+                let column = DAY_MAP[day];
+                let row = (classStartTime - table.startTime) * 2;
+                updateCellsRemoved(matrix, row, column);
+            });
+        }
+
+        state.currentTableKey = table.tableKey;
     }
 
-    state.currentTableKey = tableKey;
     state.addedSections.splice(state.addedSections.indexOf(sectionObj.sectionCode), 1);
 }
 
@@ -203,6 +233,35 @@ function insertRowsAtEnd(matrix, classEndTime, tableEndTime) {
             matrix[lastIndex][j] = initCell();
         }
     }
+}
+
+function getTerms(sectionObj, session) {
+    const termNumbers = getSectionTermNumbers(sectionObj.classes);
+    
+    let terms = [];
+    for (let termNumber of termNumbers) {
+        const academicTerm = new AcademicTerm(session, termNumber);
+        terms.push(academicTerm);
+    }
+    return terms;
+}
+
+function getSectionTermNumbers(classObjs) {
+    let termNumbers = [];
+    if (classObjs.length === 1 && classObjs[0].term === '1-2') {
+        termNumbers.push('1');
+        termNumbers.push('2');
+    } else if (classObjs.length > 0) {
+        for (let classObj of classObjs) {
+            let term = classObj.term;
+            if (!termNumbers.includes(term)) {
+                termNumbers.push(term);
+            }
+        }
+    } else {
+        throw new Error(`No classes found for this section`);
+    }
+    return termNumbers;
 }
 
 function getCellLabel(sectionObj) {
