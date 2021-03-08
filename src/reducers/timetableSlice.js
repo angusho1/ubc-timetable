@@ -40,11 +40,11 @@ export const timetableSlice = createSlice({
     reducers: {
         addSection: (state, action) => {
             const { sectionObj } = action.payload;
-            addSectionToTables(state, sectionObj);
+            addSectionMain(state, sectionObj);
         },
         removeSection: (state, action) => {
             const { sectionObj } = action.payload;
-            removeSection1(state, sectionObj);
+            removeSectionMain(state, sectionObj);
         },
         switchTable: (state, action) => {
             const tableKey = action.payload.tableKey;
@@ -84,106 +84,131 @@ function getTableByKey(state, termKey) {
     return table;
 }
 
-function addSectionToTables(state, sectionObj) {
-    const deptKey = sectionObj.courseObj.deptObj.subjCode;
-    const courseKey = sectionObj.courseObj.course;
-    const sectionKey = sectionObj.section;
-    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`;
+function filterClassesByTerm(sectionObj, term) {
+    return sectionObj.classes.filter(classObj => classObj.term === term.getTermNumber().toString());
+}
 
-    const sessionObj = sectionObj.session;
-    const academicYear = new AcademicYear(sessionObj.year);
-    const session = new AcademicSession(academicYear, sessionObj.season);
+function addSectionMain(state, sectionObj) {
+    const sectionCode = sectionObj.sectionCode;
+    const session = getSectionSession(sectionObj);
     const stateSession = getStateSession(state, session);
 
     if (sectionAdded(stateSession, sectionCode)) {
         throw new Error(`Cannot add - Section '${sectionCode}' is already in session '${session.getString()}'`);
     }
 
-    const terms = getTerms(sectionObj, session);
+    const editQueue = getTablesToEdit(state, sectionObj, session);
+    if (hasTimetableConflicts(editQueue)) {
+        console.log(`Cannot add section ${sectionCode}`);
+        return;
+    };
 
-    for (let term of terms) {
-        let classObjs = sectionObj.classes.filter(classObj => classObj.term === term.getTermNumber().toString());
+    for (let { classObjs, table } of editQueue) {
+        addSectionToTable(table, classObjs, sectionObj);
+        state.currentTableKey = table.tableKey;
+    }
 
-        const table = getTableByKey(state, term.getTermString());
+    stateSession.addedSections.push(sectionCode);
+}
+
+function hasTimetableConflicts(editQueue) {
+    for (let { classObjs, table } of editQueue) {
         let matrix = table.matrix;
         let startTime = table.startTime;
         let endTime = table.endTime;
 
         for (let classObj of classObjs) {
+            if (isInvalid(classObj.start) || isInvalid(classObj.end)) break;
+    
             const classStartTime = convertTimeToNumber(classObj.start);
             const classEndTime = convertTimeToNumber(classObj.end);
             const classLength = (classEndTime - classStartTime) * 2;
-            const days = classObj.days.trim().split(' ');
-
-            if (classStartTime < startTime) {
-                insertRowsAtStart(matrix, classStartTime, startTime);
-                startTime = classStartTime;
-            }
-            if (classEndTime > endTime) {
-                insertRowsAtEnd(matrix, classEndTime, endTime);
-                endTime = classEndTime;
-            }
-
-            let label = getCellLabel(sectionObj);
-            let start = startTime;
-
-            days.forEach(day => {
+            const days = getDaysFromClass(classObj);
+    
+            for (let day of days) {
                 let column = DAY_MAP[day];
-                let row = (classStartTime - start) * 2;
-
-                updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
-            });
+                let row = (classStartTime - startTime) * 2;
+            
+                for (let i = 0; i < classLength; i++) {
+                    if (row + i < 0 || row + i >= (endTime - startTime) * 2) {
+                        continue; // if the rows aren't in the timetable yet, they can be safely added without conflicts
+                    }
+                    let cellToReplace = matrix[row+i][column];
+                    if (cellToReplace.occupied) {
+                        return true;
+                    }
+                }
+            }
         }
-
-        state.currentTableKey = table.tableKey;
-        table.startTime = startTime;
-        table.endTime = endTime;
     }
-
-    stateSession.addedSections.push(`${deptKey} ${courseKey} ${sectionKey}`);
+    return false;
 }
 
-function removeSection1(state, sectionObj) {
-    const deptKey = sectionObj.courseObj.deptObj.subjCode;
-    const courseKey = sectionObj.courseObj.course;
-    const sectionKey = sectionObj.section;
-    const sectionCode = `${deptKey} ${courseKey} ${sectionKey}`;
-    const sessionObj = sectionObj.session;
-    const academicYear = new AcademicYear(sessionObj.year);
-    const session = new AcademicSession(academicYear, sessionObj.season);
+function addSectionToTable(table, classObjs, sectionObj) {
+    let matrix = table.matrix;
+    let startTime = table.startTime;
+    let endTime = table.endTime;
+
+    for (let classObj of classObjs) {
+        if (isInvalid(classObj.start) || isInvalid(classObj.end)) break;
+
+        const classStartTime = convertTimeToNumber(classObj.start);
+        const classEndTime = convertTimeToNumber(classObj.end);
+        const classLength = (classEndTime - classStartTime) * 2;
+        const days = getDaysFromClass(classObj);
+
+        startTime = adjustStartTime(classStartTime, startTime, matrix);
+        endTime = adjustEndTime(classEndTime, endTime, matrix);
+
+        let label = getCellLabel(sectionObj);
+        let start = startTime;
+
+        days.forEach(day => {
+            let column = DAY_MAP[day];
+            let row = (classStartTime - start) * 2;
+
+            updateCellsAdded(matrix, row, column, sectionObj, label, classLength);
+        });
+    }
+
+    table.startTime = startTime;
+    table.endTime = endTime;
+}
+
+function removeSectionMain(state, sectionObj) {
+    const sectionCode = sectionObj.sectionCode;
+    const session = getSectionSession(sectionObj);
     const stateSession = getStateSession(state, session);
 
     if (!sectionAdded(stateSession, sectionObj.sectionCode)) {
         throw new Error(`Cannot remove - Section '${sectionCode}' is not session '${session.getString()}'`);
     }
 
-    const terms = getTerms(sectionObj, session);
+    const editQueue = getTablesToEdit(state, sectionObj, session);
 
-    for (let term of terms) {
-        let classObjs = sectionObj.classes.filter(classObj => classObj.term === term.getTermNumber().toString());
-
-        const table = getTableByKey(state, term.getTermString());
-        let matrix = table.matrix;
-
-        for (let classObj of classObjs) {
-            const classStartTime = convertTimeToNumber(classObj.start);
-            const days = classObj.days.trim().split(' ');
-
-            days.forEach(day => {
-                let column = DAY_MAP[day];
-                let row = (classStartTime - table.startTime) * 2;
-                updateCellsRemoved(matrix, row, column);
-            });
-        }
-
+    for (let { classObjs, table } of editQueue) {
+        removeSectionFromTable(table, classObjs);
         state.currentTableKey = table.tableKey;
     }
 
-    stateSession.addedSections.splice(stateSession.addedSections.indexOf(sectionObj.sectionCode), 1);
+    stateSession.addedSections.splice(stateSession.addedSections.indexOf(sectionCode), 1);
 }
 
-function sectionAdded(stateSession, sectionCode) {
-    return stateSession.addedSections.includes(sectionCode);
+function removeSectionFromTable(table, classObjs) {
+    let matrix = table.matrix;
+
+    for (let classObj of classObjs) {
+        if (isInvalid(classObj.start) || isInvalid(classObj.end)) break;
+
+        const classStartTime = convertTimeToNumber(classObj.start);
+        const days = getDaysFromClass(classObj);
+
+        days.forEach(day => {
+            let column = DAY_MAP[day];
+            let row = (classStartTime - table.startTime) * 2;
+            updateCellsRemoved(matrix, row, column);
+        });
+    }
 }
 
 function updateCellsAdded(matrix, row, column, sectionObj, label, classLength) {
@@ -199,7 +224,7 @@ function updateCellsAdded(matrix, row, column, sectionObj, label, classLength) {
             cellToReplace.replaced = true;
             cellToReplace.occupied = true;
         } else {
-            throw new Error('Cannot Remove - cell is occupied');
+            throw new Error('The cell is occupied and cannot be replaced');
         }
     }
 }
@@ -223,6 +248,22 @@ function updateCellsRemoved(matrix, row, column) {
     }
 }
 
+function adjustStartTime(classStartTime, startTime, matrix) {
+    if (classStartTime < startTime) {
+        insertRowsAtStart(matrix, classStartTime, startTime);
+        startTime = classStartTime;
+    }
+    return startTime;
+}
+
+function adjustEndTime(classEndTime, endTime, matrix) {
+    if (classEndTime > endTime) {
+        insertRowsAtEnd(matrix, classEndTime, endTime);
+        endTime = classEndTime;
+    }
+    return endTime;
+}
+
 function insertRowsAtStart(matrix, classStartTime, tableStartTime) {
     const numRows = (tableStartTime - classStartTime) * 2;
     for (let i = 0; i < numRows; i++) {
@@ -244,9 +285,32 @@ function insertRowsAtEnd(matrix, classEndTime, tableEndTime) {
     }
 }
 
+function sectionAdded(stateSession, sectionCode) {
+    return stateSession.addedSections.includes(sectionCode);
+}
+
+function getDaysFromClass(classObj) {
+    return classObj.days.trim().split(' ');
+}
+
+function getSectionSession(sectionObj) {
+    const sessionObj = sectionObj.session;
+    const academicYear = new AcademicYear(sessionObj.year);
+    return new AcademicSession(academicYear, sessionObj.season);
+}
+
 function getStateSession(state, session) {
     return state.sessions.find(stateSession => {
         return `${stateSession.year}${stateSession.season}` === session.getString();
+    });
+}
+
+function getTablesToEdit(state, sectionObj, session) {
+    const terms = getTerms(sectionObj, session);
+    return terms.map(term => {
+        const classObjs = filterClassesByTerm(sectionObj, term);
+        const table = getTableByKey(state, term.getTermString());
+        return { classObjs, table };
     });
 }
 
@@ -281,6 +345,14 @@ function getSectionTermNumbers(classObjs) {
 
 function getCellLabel(sectionObj) {
     return `${sectionObj.sectionCode} (${sectionObj.activity})`;
+}
+
+function isInvalid(input) {
+    if (typeof input === 'string' || input instanceof String) {
+        return /^\s*$/.test(input);
+    } else {
+        return input === null;
+    }
 }
 
 /**
