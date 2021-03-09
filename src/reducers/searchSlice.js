@@ -16,7 +16,7 @@ export const searchDept = createAsyncThunk('search/searchDept',
     async (searchData) => {
         const deptKey = formatKey(searchData.dept);
         const session = searchData.session;
-        return searchDeptByKey(deptKey);
+        return searchDeptByKey(deptKey, session);
     }
 );
 

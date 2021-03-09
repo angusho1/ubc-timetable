@@ -9,7 +9,6 @@ import ErrorDisplay from './result-displays/ErrorDisplay';
 import SinglePointMap from './popup-displays/map/SinglePointMap';
 import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
-import { AcademicYear, AcademicSession, AcademicTerm } from '../data/AcademicCalendar.js';
 
 export class AppControl extends Component {
 

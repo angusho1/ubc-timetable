@@ -4,8 +4,6 @@ import { AcademicSession, AcademicTerm, AcademicYear } from '../data/AcademicCal
 const DEFAULT_STARTTIME = 9;
 const DEFAULT_ENDTIME = 18;
 const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 5, 'Sat' : 6};
-const DEFAULT_YEAR = 2020;
-const DEFAULT_SESSION = new AcademicSession(DEFAULT_YEAR, 'W');
 
 const initialState = {
     currentTableKey: 'table1',
