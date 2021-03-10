@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 // import ResultDisplayItem from './ResultDisplayItem';
-import { openMap } from '../../reducers/mapSlice';
+import { loadBuildingLocation, openMap } from '../../reducers/mapSlice';
 
 export class SectionResultDisplay extends Component {
     getTitle() {
@@ -72,6 +72,10 @@ export class SectionResultDisplay extends Component {
         this.props.openMap({ building });
     }
 
+    loadBuilding(building) {
+        this.props.loadBuildingLocation({ building });
+    }
+
     renderClassDisplay(classObj, index) {
         const dayString = /\S/.test(classObj.days) ? classObj.days.trim().split(' ').join(' / ') : 'No Schedule';
 
@@ -86,6 +90,7 @@ export class SectionResultDisplay extends Component {
                     Open Map
                 </button>
             </div>) : null;
+        if (locationInfo !== null) this.loadBuilding(building);
 
         const termStyle = { float: 'right', fontStyle: 'italic'};
 
@@ -169,5 +174,4 @@ function lowerLetters(name) {
     return converted.join(' ');
 }
 
-export default connect(null, { openMap })(SectionResultDisplay);
-// export default SectionResultDisplay;
+export default connect(null, { loadBuildingLocation, openMap })(SectionResultDisplay);

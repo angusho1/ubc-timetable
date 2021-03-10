@@ -10,11 +10,18 @@ export class PopUp extends Component {
         this.setState({ open: false });
     }
 
+    getVisibility() {
+        return {
+            display: this.state.open ? 'display-block' : 'none'
+        }
+        // return this.state.open ? { display: 'visible' } : { visibility: 'hidden' };
+    }
+
     render() {
         if (!this.state.open) return null;
 
         return (
-            <div className="pop-up">
+            <div style={this.getVisibility()} className="pop-up">
                 <div className="modal-content">
                     <div id="modal-content-top">
                         <span className="h3-style" style={{marginTop: '25px'}}>
@@ -23,9 +30,7 @@ export class PopUp extends Component {
                         <span className="close-btn" onClick={this.closeModal}>x</span>
                     </div>
                     <div id="map-container">
-                        {/* <div className="map"> */}
-                            {this.props.children}
-                        {/* </div> */}
+                        {this.props.children}
                     </div>
                 </div>
             </div>

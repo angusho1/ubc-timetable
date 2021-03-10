@@ -9,38 +9,55 @@ export class SinglePointMap extends Component {
         this.state = { loaded: false }
     }
 
-    mapOptions = {
-        zoom: 17,
-        center: this.props.coords
+    getCurrentLocationData() {
+        return this.props.activeLocations.find(location => {
+            return location.building === this.props.currentBuilding;
+        });
     }
 
-    componentDidMount() {
-        if (this.props.coords) {
-            this.getMap();
+    getMapOptions(coords) {
+        return {
+            zoom: 17,
+            center: coords
         }
     }
 
-    getMap() {
-        const building = this.props.building;
-        const address = this.props.address;
-        const mapDiv = this.mapRef.current;
-        const map = new window.google.maps.Map(mapDiv, this.mapOptions);
-        const marker = this.createMarker(this.props.coords, map);
-        const infoWindow = this.createInfoWindow(`<h3>${building}</h3>${address}`);
-
-        window.google.maps.event.addListener(marker, 'click', function() {
-            infoWindow.open(map,marker);
-        });
-
-        infoWindow.open(map,marker);
-        
-        this.setState({ loaded: true });
+    componentDidUpdate(prevProps) {
+        if (this.props.currentBuilding && !prevProps.currentBuilding) {
+            this.loadMap();
+        } else if (this.props.currentBuilding !== prevProps.currentBuilding) {
+            this.updateLocation();
+        }
     }
 
-    createMarker(coords, map) {
+    loadMap() {
+        const locationData = this.getCurrentLocationData();
+        const building = locationData.building;
+        const address = locationData.address;
+        const coords = locationData.location;
+        const mapOptions = this.getMapOptions(coords);
+
+        const mapDiv = this.mapRef.current;
+        this.map = new window.google.maps.Map(mapDiv, mapOptions);
+        const marker = this.createMarker(coords);
+        const infoWindow = this.createInfoWindow(`<h3>${building}</h3>${address}`);
+        this.addMarkerClickListener(marker, infoWindow);
+        
+        infoWindow.open(this.map, marker);
+    }
+
+    updateLocation() {
+        if (this.map === null) {
+            throw new Error('No map to update');
+        }
+
+        // TODO: update the map location
+    }
+
+    createMarker(coords) {
         return new window.google.maps.Marker({
             position: coords,
-            map
+            map: this.map
         });
     }
 
@@ -48,25 +65,26 @@ export class SinglePointMap extends Component {
         return new window.google.maps.InfoWindow({content});
     }
 
-    getMapVisibility() {
-        return this.state.loaded ? { visibility: 'visible' } : { visibility: 'hidden' };
+    addMarkerClickListener(marker, infoWindow) {
+        window.google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.open(this.map, marker);
+        });
     }
 
     render() {
-        if (!this.props.coords) return null;
+        if (this.props.currentBuilding === null) return null;
 
         return (
-            <PopUp header={this.props.building}>
-                <div style={this.getMapVisibility()} ref={this.mapRef} className="map"></div>
+            <PopUp header={this.props.currentBuilding}>
+                <div ref={this.mapRef} className="map"></div>
             </PopUp>
         )
     }
 }
 
 const mapState = state => ({
-    coords: state.map.coords,
-    address: state.map.address,
-    building: state.map.building
+    activeLocations: state.map.activeLocations,
+    currentBuilding: state.map.currentBuilding
 });
 
 export default connect(mapState)(SinglePointMap);

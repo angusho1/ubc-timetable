@@ -1,17 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    activeMapLocations: [],
-    addressComponents: null,
-    coords: null,
-    building: null,
-    address: null,
-    res: null,
+    activeLocations: [],
+    currentBuilding: null,
     status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
 }
 
-export const openMap = createAsyncThunk('map/openMap',
+export const loadBuildingLocation = createAsyncThunk('map/loadBuildingLocation',
     async (data) => {
         const building = data.building;
         const address = await fetchAddress(building);
@@ -28,20 +24,22 @@ export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
-
+        openMap: (state, action) => {
+            state.currentBuilding = action.payload.building;
+        }
     },
     extraReducers: {
-        [openMap.pending]: state => {
+        [loadBuildingLocation.pending]: state => {
             state.status = 'pending';
         },
-        [openMap.fulfilled]: (state, action) => {
+        [loadBuildingLocation.fulfilled]: (state, action) => {
             state.status = 'successful';
-            state.addressComponents = action.payload.addressComponents;
-            state.coords = action.payload.location;
-            state.building = action.payload.building;
-            state.address = action.payload.address;
+            const locationData = action.payload;
+            if (!state.activeLocations.find(data => data.building === locationData.building)) {
+                state.activeLocations.push(action.payload);
+            }
         },
-        [openMap.rejected]: (state, action) => {
+        [loadBuildingLocation.rejected]: (state, action) => {
             state.status = 'failed';
             state.status = action.error.message;
         }
@@ -64,5 +62,7 @@ function fetchLocationData(address) {
     return fetch(url)
         .then(res => res.json());
 }
+
+export const { openMap } = mapSlice.actions;
 
 export default mapSlice.reducer;
