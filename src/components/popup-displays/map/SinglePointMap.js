@@ -6,7 +6,6 @@ export class SinglePointMap extends Component {
     constructor(props) {
         super(props);
         this.mapRef = React.createRef();
-        this.state = { loaded: false }
     }
 
     getCurrentLocationData() {
@@ -51,7 +50,11 @@ export class SinglePointMap extends Component {
             throw new Error('No map to update');
         }
 
-        // TODO: update the map location
+        const locationData = this.getCurrentLocationData();
+        const coords = locationData.location;
+
+        const newCenter = new window.google.maps.LatLng(coords.lat, coords.lng);
+        this.map.panTo(newCenter);
     }
 
     createMarker(coords) {
@@ -75,7 +78,9 @@ export class SinglePointMap extends Component {
         if (this.props.currentBuilding === null) return null;
 
         return (
-            <PopUp header={this.props.currentBuilding}>
+            <PopUp open={this.props.open}
+                    header={this.props.currentBuilding}
+                    closeModal={this.props.closeModal}>
                 <div ref={this.mapRef} className="map"></div>
             </PopUp>
         )
@@ -84,7 +89,6 @@ export class SinglePointMap extends Component {
 
 const mapState = state => ({
     activeLocations: state.map.activeLocations,
-    currentBuilding: state.map.currentBuilding
 });
 
 export default connect(mapState)(SinglePointMap);

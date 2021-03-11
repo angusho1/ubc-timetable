@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     activeLocations: [],
-    currentBuilding: null,
     status: 'idle' | 'pending' | 'successful' | 'failed',
     error: null
 }
@@ -24,9 +23,7 @@ export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
-        openMap: (state, action) => {
-            state.currentBuilding = action.payload.building;
-        }
+
     },
     extraReducers: {
         [loadBuildingLocation.pending]: state => {
@@ -62,7 +59,5 @@ function fetchLocationData(address) {
     return fetch(url)
         .then(res => res.json());
 }
-
-export const { openMap } = mapSlice.actions;
 
 export default mapSlice.reducer;

@@ -1,25 +1,13 @@
 import React, { Component } from 'react';
 
 export class PopUp extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { open: true };
-    }
-
-    closeModal = (e) => {
-        this.setState({ open: false });
-    }
-
     getVisibility() {
         return {
-            display: this.state.open ? 'display-block' : 'none'
+            display: this.props.open ? 'inline-block' : 'none'
         }
-        // return this.state.open ? { display: 'visible' } : { visibility: 'hidden' };
     }
 
     render() {
-        if (!this.state.open) return null;
-
         return (
             <div style={this.getVisibility()} className="pop-up">
                 <div className="modal-content">
@@ -27,7 +15,7 @@ export class PopUp extends Component {
                         <span className="h3-style" style={{marginTop: '25px'}}>
                             {this.props.header}
                         </span>
-                        <span className="close-btn" onClick={this.closeModal}>x</span>
+                        <span className="close-btn" onClick={this.props.closeModal}>x</span>
                     </div>
                     <div id="map-container">
                         {this.props.children}

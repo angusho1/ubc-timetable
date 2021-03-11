@@ -11,6 +11,13 @@ import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
 
 export class AppControl extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mapOpen: false,
+            currentBuilding: null
+        }
+    }
 
     handleAddRemoveSection = () => {
         const payload = {
@@ -40,6 +47,15 @@ export class AppControl extends Component {
         return `${deptKey} ${courseKey} ${sectionKey}`;
     }
 
+    openMap = (building) => {
+        this.setState({ currentBuilding: building,
+                        mapOpen: true });
+    }
+
+    closeModal = (e) => {
+        this.setState({ mapOpen: false });
+    }
+
     renderResultDisplay() {
         const type = this.props.typeObjectOnDisplay;
         const objectOnDisplay = this.props.objectOnDisplay;
@@ -52,7 +68,8 @@ export class AppControl extends Component {
         } else if (type === SearchType.SECTION) {
             return (<SectionResultDisplay sectionObj={objectOnDisplay}
                                         handleAddRemoveSection={this.handleAddRemoveSection}
-                                        isSectionAdded={this.isSectionAdded()} />);
+                                        isSectionAdded={this.isSectionAdded()}
+                                        openMap={this.openMap} />);
         } else {
             return null;
         }
@@ -74,7 +91,9 @@ export class AppControl extends Component {
                     {this.renderResultDisplay()}
                 </div>
                 <TimetableControl />
-                <SinglePointMap />
+                <SinglePointMap currentBuilding={this.state.currentBuilding}
+                                open={this.state.mapOpen}
+                                closeModal={this.closeModal}/>
             </div>
         )
     }

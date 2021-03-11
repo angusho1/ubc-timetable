@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 // import ResultDisplayItem from './ResultDisplayItem';
-import { loadBuildingLocation, openMap } from '../../reducers/mapSlice';
+import { loadBuildingLocation } from '../../reducers/mapSlice';
 
 export class SectionResultDisplay extends Component {
     getTitle() {
@@ -69,7 +69,8 @@ export class SectionResultDisplay extends Component {
     }
 
     openLocationMap(building) {
-        this.props.openMap({ building });
+        this.props.openMap(building);
+        // this.props.openMap({ building });
     }
 
     loadBuilding(building) {
@@ -174,4 +175,4 @@ function lowerLetters(name) {
     return converted.join(' ');
 }
 
-export default connect(null, { loadBuildingLocation, openMap })(SectionResultDisplay);
+export default connect(null, { loadBuildingLocation })(SectionResultDisplay);
