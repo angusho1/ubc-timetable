@@ -62,7 +62,7 @@ export class AppControl extends Component {
         if (this.props.status === 'pending') return null;
         if (this.props.status === 'failed') return this.failedDisplay();
         if (type === SearchType.DEPT) {
-            return (<DeptResultDisplay objectOnDisplay={objectOnDisplay} />);
+            return (<DeptResultDisplay deptObj={objectOnDisplay} />);
         } else if (type === SearchType.COURSE) {
             return (<CourseResultDisplay courseObj={objectOnDisplay} />);
         } else if (type === SearchType.SECTION) {
