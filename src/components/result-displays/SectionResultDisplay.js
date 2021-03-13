@@ -70,7 +70,6 @@ export class SectionResultDisplay extends Component {
 
     openLocationMap(building) {
         this.props.openMap(building);
-        // this.props.openMap({ building });
     }
 
     loadBuilding(building) {

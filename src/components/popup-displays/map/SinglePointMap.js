@@ -38,22 +38,28 @@ export class SinglePointMap extends Component {
 
         const mapDiv = this.mapRef.current;
         this.map = new window.google.maps.Map(mapDiv, mapOptions);
-        const marker = this.createMarker(coords);
-        const infoWindow = this.createInfoWindow(`<h3>${building}</h3>${address}`);
-        this.addMarkerClickListener(marker, infoWindow);
-        
-        infoWindow.open(this.map, marker);
+        this.marker = this.createMarker(coords);
+        const infoWindow = this.createInfoWindow(building, address);
+        this.addMarkerClickListener(this.marker, infoWindow);
+        infoWindow.open(this.map, this.marker);
     }
 
     updateLocation() {
-        if (this.map === null) {
+        if (this.map === null || this.marker === null) {
             throw new Error('No map to update');
         }
 
+        this.marker.setMap(null);
         const locationData = this.getCurrentLocationData();
+        const building = locationData.building;
+        const address = locationData.address;
         const coords = locationData.location;
 
         const newCenter = new window.google.maps.LatLng(coords.lat, coords.lng);
+        this.marker = this.createMarker(coords);
+        const newInfoWindow = this.createInfoWindow(building, address);
+        this.addMarkerClickListener(this.marker, newInfoWindow);
+        newInfoWindow.open(this.map, this.marker);
         this.map.panTo(newCenter);
     }
 
@@ -64,7 +70,8 @@ export class SinglePointMap extends Component {
         });
     }
 
-    createInfoWindow(content) {
+    createInfoWindow(building, address) {
+        const content = `<h3>${building}</h3>${address}`;
         return new window.google.maps.InfoWindow({content});
     }
 
