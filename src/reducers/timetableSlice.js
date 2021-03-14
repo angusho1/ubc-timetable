@@ -124,6 +124,10 @@ function hasTimetableConflicts(editQueue) {
             const days = getDaysFromClass(classObj);
     
             for (let day of days) {
+                if (isDayAlternating(day)) { // TODO: Add exception for days with alternating weeks
+                    day = day.replace('*', '');
+                    day = day.replace('^', '');
+                }
                 let column = DAY_MAP[day];
                 let row = (classStartTime - startTime) * 2;
             
@@ -162,6 +166,11 @@ function addSectionToTable(table, classObjs, sectionObj) {
         let start = startTime;
 
         days.forEach(day => {
+            if (isDayAlternating(day)) { // TODO: Add exception for days with alternating weeks
+                day = day.replace('*', '');
+                day = day.replace('^', '');
+            }
+
             let column = DAY_MAP[day];
             let row = (classStartTime - start) * 2;
 
@@ -202,6 +211,10 @@ function removeSectionFromTable(table, classObjs) {
         const days = getDaysFromClass(classObj);
 
         days.forEach(day => {
+            if (isDayAlternating(day)) { // TODO: Add exception for days with alternating weeks
+                day = day.replace('*', '');
+                day = day.replace('^', '');
+            }
             let column = DAY_MAP[day];
             let row = (classStartTime - table.startTime) * 2;
             updateCellsRemoved(matrix, row, column);
@@ -367,6 +380,12 @@ function convertTimeToNumber(str) {
     const minutes = parseInt(timeArray[1]) / 60;
     // console.log(`${str} -> ${hours + minutes}`);
     return hours + minutes;
+}
+
+function isDayAlternating(day) {
+    const asterisk = /\*/;
+    const caret = /\^/;
+    return (asterisk.test(day) || caret.test(day));
 }
 
 export const { addSection, removeSection, switchTable } = timetableSlice.actions;
