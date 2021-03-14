@@ -279,65 +279,6 @@ td {
 
 
 
-
-/* The Modal (background) */
-.pop-up {
-  display: inline-block;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  display: flex; /*added*/
-  flex-direction: column;
-  /* vertical-align: middle; */
-  padding: 2vw;
-  border: 1px solid #888;
-  border-radius: 5px;
-  width: 90%;
-  height: 80%;
-
-  /* position: fixed; */
-  /* top: 60%; */
-  /* left: 50%; */
-  /* margin-top: -40%; Negative half of height. */
-  /* margin-left: -45%; Negative half of width. */
-}
-
-#modal-content-top {
-  /* display: block; */
-}
-
-/* The Close Button */
-.close-btn {
-  color: #aaa;
-  float: right;
-  line-height: 1em;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-  color: #0055B7;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-#map-container {
-  width: 100%;
-  height: 100%;
-}
-
 .map {
   width: 100%;
   height: 100%;
@@ -368,10 +309,6 @@ td {
 
   .container-box {
       padding: 2.5vw;
-  }
-
-  .modal-content {
-      padding: 1.5vw;
   }
 }
 
@@ -422,10 +359,6 @@ td {
 
   .form-container {
       grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  }
-
-  .modal-content {
-      padding: 1vw;
   }
 }
 

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import './pop-up.css';
 
 export class PopUp extends Component {
     getVisibility() {
         return {
-            display: this.props.open ? 'inline-block' : 'none'
+            display: this.props.open ? 'flex' : 'none'
         }
     }
 
     render() {
         return (
             <div style={this.getVisibility()} className="pop-up">
-                <div className="modal-content">
+                <div className="pop-up-container">
                     <div id="modal-content-top">
                         <span className="h3-style" style={{marginTop: '25px'}}>
                             {this.props.header}
