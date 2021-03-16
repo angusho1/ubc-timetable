@@ -27,7 +27,6 @@ export class DeptResultDisplay extends Component {
     renderCourses() {
         const courses = Object.values(this.props.deptObj.courses);
         return courses.map((course) => {
-            console.log(course);
             const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
             const deptKey = this.props.deptObj.subjCode;
             const courseKey = course.course;

@@ -154,7 +154,7 @@ function copyCourseProperties(courseObj) {
 }
 
 /**
- * @todo move API calls into a service
+ * TODO: move API calls into a service
  */
 function fetchData() {
     return fetch('/courseData.json')
