@@ -1,35 +1,75 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AcademicSession, AcademicTerm, AcademicYear } from '../data/AcademicCalendar';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 const DEFAULT_STARTTIME = 9;
 const DEFAULT_ENDTIME = 18;
 const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 5, 'Sat' : 6};
 
+function updateCookie(name, data) {
+    cookies.set(name, data, { path: '/', maxAge: 1200 });
+}
+
+function getInitialStateSessions() {
+    const existingCookie = cookies.get('sessions');
+    if (typeof existingCookie === 'undefined') {
+        const initialSessions = [
+            {
+                year: 2020,
+                season: 'W',
+                addedSections: []
+            }
+        ];
+        updateCookie('sessions', initialSessions);
+        return initialSessions;
+    }
+    return existingCookie;
+}
+
+function getinitialStateTables() {
+    const existingCookie = cookies.get('tables');
+    if (typeof existingCookie === 'undefined') {
+        const initialTables = [
+            {
+                tableKey: 'table1',
+                startTime: DEFAULT_STARTTIME,
+                endTime: DEFAULT_ENDTIME,
+                term: '2020 W1',
+                matrix: initMatrix()
+            },
+            {
+                tableKey: 'table2',
+                startTime: DEFAULT_STARTTIME,
+                endTime: DEFAULT_ENDTIME,
+                term: '2020 W2',
+                matrix: initMatrix()
+            }
+        ];
+        updateCookie('tables', initialTables);
+        return initialTables;
+    }
+    // const session = existingCookie[0];
+    // session.addedSections.forEach(section => {
+
+    // })
+    return existingCookie;
+}
+
+function getInitialTableKey() {
+    const existingCookie = cookies.get('currentTableKey');
+    if (typeof existingCookie === 'undefined') {
+        const initialTableKey = 'table1';
+        updateCookie('currentTableKey', initialTableKey);
+        return initialTableKey;
+    }
+    return existingCookie;
+}
+
 const initialState = {
-    currentTableKey: 'table1',
-    sessions: [
-        {
-            year: 2020,
-            season: 'W',
-            addedSections: []
-        }
-    ],
-    tables: [
-        {
-            tableKey: 'table1',
-            startTime: DEFAULT_STARTTIME,
-            endTime: DEFAULT_ENDTIME,
-            term: '2020 W1',
-            matrix: initMatrix()
-        },
-        {
-            tableKey: 'table2',
-            startTime: DEFAULT_STARTTIME,
-            endTime: DEFAULT_ENDTIME,
-            term: '2020 W2',
-            matrix: initMatrix()
-        }
-    ]
+    currentTableKey: getInitialTableKey(),
+    sessions: getInitialStateSessions(),
+    tables: getinitialStateTables()
 }
 
 export const timetableSlice = createSlice({
@@ -39,14 +79,21 @@ export const timetableSlice = createSlice({
         addSection: (state, action) => {
             const { sectionObj } = action.payload;
             addSectionMain(state, sectionObj);
+            updateCookie('sessions', state.sessions);
+            updateCookie('tables', state.tables);
+            updateCookie('currentTableKey', state.currentTableKey);
         },
         removeSection: (state, action) => {
             const { sectionObj } = action.payload;
             removeSectionMain(state, sectionObj);
+            updateCookie('sessions', state.sessions);
+            updateCookie('tables', state.tables);
+            updateCookie('currentTableKey', state.currentTableKey);
         },
         switchTable: (state, action) => {
             const tableKey = action.payload.tableKey;
             state.currentTableKey = tableKey;
+            updateCookie('currentTableKey', state.currentTableKey);
         }
     }
 });
