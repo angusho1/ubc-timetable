@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
@@ -7,45 +7,30 @@ const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
 const EMPTY_REGEX = /^\s*$/;
 
-export class SearchForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            deptValue: '',
-            deptValid: false,
-            deptSearched: false,
-            courseValue: '',
-            courseValid: false,
-            courseSearched: false,
-            sectionValue: '',
-            sectionValid: false,
-            sectionSearched: false
-        };
-    }
+function SearchForm(props) {
+    const [deptValue, setDeptValue] = useState('');
+    const [deptValid, setDeptValid] = useState(false);
+    const [deptSearched, setDeptSearched] = useState(false);
 
-    handleInputChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState({
-            [name]: value
-        });
-    }
+    const [courseValue, setCourseValue] = useState('');
+    const [courseValid, setCourseValid] = useState(false);
+    const [courseSearched, setCourseSearched] = useState(false);
 
-    handleFormSubmit = (e) => {
+    const [sectionValue, setSectionValue] = useState('');
+    const [sectionValid, setSectionValid] = useState(false);
+    const [sectionSearched, setSectionSearched] = useState(false);
+
+    const handleFormSubmit = (e) => {
         e.preventDefault();
-        const dept = this.state.deptValue;
-        const course = this.state.courseValue;
-        const section = this.state.sectionValue;
-        const inputValidityState = this.validateInputs(dept, course, section);
-        this.updateInputState(dept, course, section, inputValidityState);
-        this.initSearch(dept, course, section);
+        const dept = deptValue;
+        const course = courseValue;
+        const section = sectionValue;
+        const inputValidityState = validateInputs(dept, course, section);
+        updateInputState(dept, course, section, inputValidityState);
+        initSearch(dept, course, section);
     }
 
-    clearText(inputName) {
-        this.setState({ [inputName]: '' });
-    }
-
-    validateInputs(dept, course, section) {
+    const validateInputs = (dept, course, section) => {
         const deptSyntaxValid = DEPT_REGEX.test(dept);
         const courseSyntaxValid = COURSE_SECTION_REGEX.test(course);
         const sectionSyntaxValid = COURSE_SECTION_REGEX.test(section);
@@ -67,21 +52,21 @@ export class SearchForm extends Component {
         };
     }
 
-    initSearch(dept, course, section) {
+    const initSearch = (dept, course, section) => {
         const courseEmpty = EMPTY_REGEX.test(course);
         const sectionEmpty = EMPTY_REGEX.test(section);
         const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
 
         if (!sectionEmpty) {
-            this.props.searchSection({ dept, course, section, session });
+            props.searchSection({ dept, course, section, session });
         } else if (!courseEmpty) {
-            this.props.searchCourse({ dept, course, session });
+            props.searchCourse({ dept, course, session });
         } else {
-            this.props.searchDept({ dept, session });
+            props.searchDept({ dept, session });
         }
     }
 
-    updateInputState(dept, course, section, inputValidityState) {
+    const updateInputState = (dept, course, section, inputValidityState) => {
         const courseEmpty = EMPTY_REGEX.test(course);
         const sectionEmpty = EMPTY_REGEX.test(section);
         let deptSearched = false;
@@ -96,57 +81,53 @@ export class SearchForm extends Component {
             deptSearched = true;
         }
 
-        this.setState({
-            deptSearched,
-            courseSearched,
-            sectionSearched,
-            deptValid: inputValidityState.dept,
-            courseValid: inputValidityState.course,
-            sectionValid: inputValidityState.section
-        });
+        setDeptSearched(deptSearched);
+        setCourseSearched(courseSearched);
+        setSectionSearched(sectionSearched);
+        setDeptValid(inputValidityState.dept);
+        setCourseValid(inputValidityState.course);
+        setSectionValid(inputValidityState.section);
     }    
 
-    render() {
-        return (
-            <form className="container-box" onSubmit={this.handleFormSubmit}>
-                <h2>Find a Course:</h2>
-                <div className="form-container">
-                    <SearchInput    inputId="dept-input"
-                                    label="Department" 
-                                    placeholder="ex: CPSC"
-                                    name="deptValue"
-                                    value={this.state.deptValue}
-                                    valid={this.state.deptValid}
-                                    searched={this.state.deptSearched}
-                                    handleInputChange={this.handleInputChange}
-                                    clearText={this.clearText.bind(this)}
-                    />
-                    <SearchInput    inputId="course-input"
-                                    label="Course" 
-                                    placeholder="ex: 210"
-                                    name="courseValue"
-                                    value={this.state.courseValue}
-                                    valid={this.state.courseValid}
-                                    searched={this.state.courseSearched}
-                                    handleInputChange={this.handleInputChange}
-                                    clearText={this.clearText.bind(this)}
-                    />
-                    <SearchInput    inputId="section-input"
-                                    label="Section" 
-                                    placeholder="ex: 103"
-                                    name="sectionValue"
-                                    value={this.state.sectionValue}
-                                    valid={this.state.sectionValid}
-                                    searched={this.state.sectionSearched}
-                                    handleInputChange={this.handleInputChange}
-                                    clearText={this.clearText.bind(this)}
-                    />
-                </div>
+    return (
+        <form className="container-box" onSubmit={handleFormSubmit}>
+            <h2>Find a Course:</h2>
+            <div className="form-container">
+                <SearchInput    inputId="dept-input"
+                                label="Department" 
+                                placeholder="ex: CPSC"
+                                name="deptValue"
+                                value={deptValue}
+                                valid={deptValid}
+                                searched={deptSearched}
+                                handleInputChange={(e) => setDeptValue(e.target.value)}
+                                clearText={() => setDeptValue('')}
+                />
+                <SearchInput    inputId="course-input"
+                                label="Course" 
+                                placeholder="ex: 210"
+                                name="courseValue"
+                                value={courseValue}
+                                valid={courseValid}
+                                searched={courseSearched}
+                                handleInputChange={(e) => setCourseValue(e.target.value)}
+                                clearText={() => setCourseValue('')}
+                />
+                <SearchInput    inputId="section-input"
+                                label="Section" 
+                                placeholder="ex: 103"
+                                name="sectionValue"
+                                value={sectionValue}
+                                valid={sectionValid}
+                                searched={sectionSearched}
+                                handleInputChange={(e) => setSectionValue(e.target.value)}
+                                clearText={() => setSectionValue('')}
+                />
+            </div>
 
-                <input className="btn" type="submit" id="search-btn" value="Search" />
-            </form>
-        )
-    }
+            <input className="btn" type="submit" id="search-btn" value="Search" />
+        </form>
+    )
 }
 
 const mapDispatch = { searchDept, searchCourse, searchSection };
