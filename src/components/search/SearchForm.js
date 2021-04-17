@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
+import * as Yup from 'yup';
+import { Formik, useFormik } from 'formik';
 
 const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
@@ -20,7 +22,25 @@ function SearchForm(props) {
     const [sectionValid, setSectionValid] = useState(false);
     const [sectionSearched, setSectionSearched] = useState(false);
 
+    const validationSchema = Yup.object({
+        deptValue: Yup.string()
+            .required()
+            .matches(DEPT_REGEX),
+        courseValue: Yup.string()
+            .when('sectionValue', {
+                is: sectionValue => ! EMPTY_REGEX.test(sectionValue),
+                then: Yup.string().required().matches(COURSE_SECTION_REGEX),
+                otherwise: Yup.string().matches(EMPTY_REGEX)
+            }),
+        sectionValue: Yup.string().matches(COURSE_SECTION_REGEX)
+            // .when('sectionValue', {
+            //     is: sectionValue => ! EMPTY_REGEX.test(sectionValue),
+            //     then: Yup.string().matches(COURSE_SECTION_REGEX)
+            // })
+    });
+
     const handleFormSubmit = (e) => {
+
         e.preventDefault();
         const dept = deptValue;
         const course = courseValue;
@@ -87,46 +107,62 @@ function SearchForm(props) {
         setDeptValid(inputValidityState.dept);
         setCourseValid(inputValidityState.course);
         setSectionValid(inputValidityState.section);
-    }    
+    }
+
+    const formik = useFormik({
+        initialValues: {
+
+        },
+        validationSchema,
+        onSubmit: handleFormSubmit
+    });
 
     return (
-        <form className="container-box" onSubmit={handleFormSubmit}>
-            <h2>Find a Course:</h2>
-            <div className="form-container">
-                <SearchInput    inputId="dept-input"
-                                label="Department" 
-                                placeholder="ex: CPSC"
-                                name="deptValue"
-                                value={deptValue}
-                                valid={deptValid}
-                                searched={deptSearched}
-                                handleInputChange={(e) => setDeptValue(e.target.value)}
-                                clearText={() => setDeptValue('')}
-                />
-                <SearchInput    inputId="course-input"
-                                label="Course" 
-                                placeholder="ex: 210"
-                                name="courseValue"
-                                value={courseValue}
-                                valid={courseValid}
-                                searched={courseSearched}
-                                handleInputChange={(e) => setCourseValue(e.target.value)}
-                                clearText={() => setCourseValue('')}
-                />
-                <SearchInput    inputId="section-input"
-                                label="Section" 
-                                placeholder="ex: 103"
-                                name="sectionValue"
-                                value={sectionValue}
-                                valid={sectionValid}
-                                searched={sectionSearched}
-                                handleInputChange={(e) => setSectionValue(e.target.value)}
-                                clearText={() => setSectionValue('')}
-                />
-            </div>
+        <Formik
+            initialValues={{ deptValue: '', courseValue: '', sectionValue: ''}}
+            validationSchema={validationSchema}
+            onSubmit={handleFormSubmit}
+        >   
+            {formik => (
+                <form className="container-box">
+                <h2>Find a Course:</h2>
+                <div className="form-container">
+                    <SearchInput    inputId="dept-input"
+                                    label="Department" 
+                                    placeholder="ex: CPSC"
+                                    name="deptValue"
+                                    value={deptValue}
+                                    valid={deptValid}
+                                    searched={deptSearched}
+                                    handleInputChange={(e) => setDeptValue(e.target.value)}
+                                    clearText={() => setDeptValue('')}
+                    />
+                    <SearchInput    inputId="course-input"
+                                    label="Course" 
+                                    placeholder="ex: 210"
+                                    name="courseValue"
+                                    value={courseValue}
+                                    valid={courseValid}
+                                    searched={courseSearched}
+                                    handleInputChange={(e) => setCourseValue(e.target.value)}
+                                    clearText={() => setCourseValue('')}
+                    />
+                    <SearchInput    inputId="section-input"
+                                    label="Section" 
+                                    placeholder="ex: 103"
+                                    name="sectionValue"
+                                    value={sectionValue}
+                                    valid={sectionValid}
+                                    searched={sectionSearched}
+                                    handleInputChange={(e) => setSectionValue(e.target.value)}
+                                    clearText={() => setSectionValue('')}
+                    />
+                </div>
 
-            <input className="btn" type="submit" id="search-btn" value="Search" />
-        </form>
+                <input className="btn" type="submit" id="search-btn" value="Search" />
+            </form>
+            )}
+        </Formik>
     )
 }
 
