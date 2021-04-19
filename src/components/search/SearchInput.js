@@ -1,49 +1,47 @@
-import React, { Component } from 'react';
-import { Field } from 'formik';
+import React, { useState } from 'react';
+import { useField } from 'formik';
 
-export class SearchInput extends Component {
-    determineClasses() {
-        let classList = '';
-        if (this.props.searched) {
-            if (this.props.valid) {
-                classList = `${classList} searched-input`;
-            } else {
-                classList = `${classList} error-border`;
-            }
+function SearchInput({ label, ...props }) {
+    const [field, meta] = useField(props);
+    const [hasFocused, setHasFocused] = useState(false);
+
+    const determineClasses = () => {
+        if (meta.error) {
+            return 'error-border';
+        } else if ((meta.touched || hasFocused) && field.value) {
+            return 'searched-input';
         }
-        return classList;
+        return '';
     }
 
-    hidePlaceHolder = (e) => {
+    const hidePlaceHolder = (e) => {
         const clickedInputBox = e.target;
         clickedInputBox.placeholder = '';
-        if (this.props.searched) {
-            this.props.clearText();
-        }
+        setHasFocused(true);
+        // if (props.searched) {
+            // props.clearText();
+        // }
     }
 
-    showPlaceholder = (e) => {
-        e.target.placeholder = this.props.placeholder;
+    const showPlaceholder = (e) => {
+        e.target.placeholder = props.placeholder;
     }
 
-    render() {
-        return (
-            <div className="label-container">
-                <label  htmlFor={this.props.inputId} className="form-label">
-                    {this.props.label}
-                </label>
-                <Field  
-                        type="text"
-                        id={this.props.inputId}
-                        className={this.determineClasses()}
-                        placeholder={this.props.placeholder}
-                        name={this.props.name}
-                        onFocus={this.hidePlaceHolder}
-                        onBlur={this.showPlaceholder}
-                />
-            </div>
-        )
-    }
+    return (
+        <div className="label-container">
+            <label  htmlFor={props.inputId} className="form-label">
+                {label}
+            </label>
+            <input  
+                    type="text"
+                    {... props}
+                    {... field}
+                    className={determineClasses()}
+                    onFocus={hidePlaceHolder}
+                    onBlur={showPlaceholder}
+            />
+        </div>
+    )
 }
 
 export default SearchInput;
