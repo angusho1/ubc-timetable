@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Field } from 'formik';
 
 export class SearchInput extends Component {
     determineClasses() {
@@ -17,7 +18,7 @@ export class SearchInput extends Component {
         const clickedInputBox = e.target;
         clickedInputBox.placeholder = '';
         if (this.props.searched) {
-            this.props.clearText(this.props.name);
+            this.props.clearText();
         }
     }
 
@@ -31,13 +32,12 @@ export class SearchInput extends Component {
                 <label  htmlFor={this.props.inputId} className="form-label">
                     {this.props.label}
                 </label>
-                <input  type="text"
+                <Field  
+                        type="text"
                         id={this.props.inputId}
                         className={this.determineClasses()}
                         placeholder={this.props.placeholder}
                         name={this.props.name}
-                        value={this.props.value}
-                        onChange={this.props.handleInputChange}
                         onFocus={this.hidePlaceHolder}
                         onBlur={this.showPlaceholder}
                 />

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 import * as Yup from 'yup';
-import { Formik, useFormik } from 'formik';
+import { Formik, Form } from 'formik';
 
 const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
@@ -22,29 +22,27 @@ function SearchForm(props) {
     const [sectionValid, setSectionValid] = useState(false);
     const [sectionSearched, setSectionSearched] = useState(false);
 
-    const validationSchema = Yup.object({
+    const validationSchema = Yup.object().shape({
         deptValue: Yup.string()
-            .required()
-            .matches(DEPT_REGEX),
+            .matches(DEPT_REGEX)
+            .required(),
         courseValue: Yup.string()
+            .matches(COURSE_SECTION_REGEX)
             .when('sectionValue', {
-                is: sectionValue => ! EMPTY_REGEX.test(sectionValue),
-                then: Yup.string().required().matches(COURSE_SECTION_REGEX),
-                otherwise: Yup.string().matches(EMPTY_REGEX)
+                is: sectionValue => sectionValue && sectionValue.length > 0,
+                then: Yup.string().required(),
             }),
-        sectionValue: Yup.string().matches(COURSE_SECTION_REGEX)
-            // .when('sectionValue', {
-            //     is: sectionValue => ! EMPTY_REGEX.test(sectionValue),
-            //     then: Yup.string().matches(COURSE_SECTION_REGEX)
-            // })
+        sectionValue: Yup.string()
+            .matches(COURSE_SECTION_REGEX, { excludeEmptyString: true })
     });
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (values) => {
 
-        e.preventDefault();
-        const dept = deptValue;
-        const course = courseValue;
-        const section = sectionValue;
+        console.log(values);
+
+        const dept = values.deptValue;
+        const course = values.courseValue;
+        const section = values.sectionValue;
         const inputValidityState = validateInputs(dept, course, section);
         updateInputState(dept, course, section, inputValidityState);
         initSearch(dept, course, section);
@@ -109,59 +107,43 @@ function SearchForm(props) {
         setSectionValid(inputValidityState.section);
     }
 
-    const formik = useFormik({
-        initialValues: {
-
-        },
-        validationSchema,
-        onSubmit: handleFormSubmit
-    });
-
     return (
         <Formik
             initialValues={{ deptValue: '', courseValue: '', sectionValue: ''}}
             validationSchema={validationSchema}
             onSubmit={handleFormSubmit}
         >   
-            {formik => (
-                <form className="container-box">
+            <Form className="container-box">
                 <h2>Find a Course:</h2>
                 <div className="form-container">
-                    <SearchInput    inputId="dept-input"
+                    <SearchInput    inputId="deptValue"
                                     label="Department" 
                                     placeholder="ex: CPSC"
                                     name="deptValue"
-                                    value={deptValue}
                                     valid={deptValid}
                                     searched={deptSearched}
-                                    handleInputChange={(e) => setDeptValue(e.target.value)}
                                     clearText={() => setDeptValue('')}
                     />
-                    <SearchInput    inputId="course-input"
+                    <SearchInput    inputId="courseValue"
                                     label="Course" 
                                     placeholder="ex: 210"
                                     name="courseValue"
-                                    value={courseValue}
                                     valid={courseValid}
                                     searched={courseSearched}
-                                    handleInputChange={(e) => setCourseValue(e.target.value)}
                                     clearText={() => setCourseValue('')}
                     />
-                    <SearchInput    inputId="section-input"
+                    <SearchInput    inputId="sectionValue"
                                     label="Section" 
                                     placeholder="ex: 103"
                                     name="sectionValue"
-                                    value={sectionValue}
                                     valid={sectionValid}
                                     searched={sectionSearched}
-                                    handleInputChange={(e) => setSectionValue(e.target.value)}
                                     clearText={() => setSectionValue('')}
                     />
                 </div>
 
                 <input className="btn" type="submit" id="search-btn" value="Search" />
-            </form>
-            )}
+            </Form>
         </Formik>
     )
 }
