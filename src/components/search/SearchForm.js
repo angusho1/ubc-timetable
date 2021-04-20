@@ -7,7 +7,6 @@ import { Formik, Form } from 'formik';
 
 const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
-const EMPTY_REGEX = /^\s*$/;
 
 function SearchForm(props) {
 
@@ -33,13 +32,11 @@ function SearchForm(props) {
     }
 
     const initSearch = (dept, course, section) => {
-        const courseEmpty = EMPTY_REGEX.test(course);
-        const sectionEmpty = EMPTY_REGEX.test(section);
         const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
 
-        if (!sectionEmpty) {
+        if (section.length > 0) {
             props.searchSection({ dept, course, section, session });
-        } else if (!courseEmpty) {
+        } else if (course.length > 0) {
             props.searchCourse({ dept, course, session });
         } else {
             props.searchDept({ dept, session });
