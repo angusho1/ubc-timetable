@@ -45,7 +45,6 @@ function fetchAddress(building) {
     return fetch('/buildings.json')
         .then(res => res.json())
         .then(buildingData => {
-            console.log(buildingData);
             return `${buildingData[building].address}, Vancouver, BC`;
         });
 }
