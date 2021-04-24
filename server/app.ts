@@ -2,7 +2,8 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import TestConnection from './services/db.service';
+
+import buildingRoutes from './routes/building.route';
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.resolve("./", 'build')));
 
-TestConnection().catch(console.dir);
+app.use(buildingRoutes);
 
 export default app;
 module.exports = app;
