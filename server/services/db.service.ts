@@ -1,16 +1,15 @@
-import { MongoClient } from 'mongodb';
+import { Collection, Db, MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_ATLAS_URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const dbName = process.env.MONGODB_NAME;
+const connection = client.connect();
 
-async function run() {
-    try {
-        await client.connect();
-        await client.db("admin").command({ ping: 1 });
-        console.log("Connected successfully to server");
-    } finally {
-        await client.close();
-    }
+async function getDb(): Promise<Db> {
+    return await connection.then(client => client.db(dbName));
 }
 
-export default run;
+const buildingsCollection: Promise<Collection> = getDb().then(db => db.collection('buildings'));
+
+
+export default { buildingsCollection };
