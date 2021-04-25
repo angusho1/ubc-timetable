@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import buildingService from '../services/buildingService';
+import BuildingService from '../services/buildingService';
 
 const initialState = {
     activeLocations: [],
@@ -10,7 +12,7 @@ export const loadBuildingLocation = createAsyncThunk('map/loadBuildingLocation',
     async (data) => {
         const building = data.building;
         const address = await fetchAddress(building);
-        const geocodingRes = await fetchLocationData(address);
+        const geocodingRes = await BuildingService.getLocationDataByAddress(address);
         const location = geocodingRes.results[0].geometry.location;
         const addressComponents = geocodingRes.results[0].address_components;
         return { addressComponents, location, address, building };
@@ -41,20 +43,9 @@ export const mapSlice = createSlice({
     }
 });
 
-function fetchAddress(building) {
-    return fetch(`/buildings?name=${building}`)
-        .then(res => res.json())
-        .then(buildingData => {
-            return `${buildingData[0].address}, Vancouver, BC`
-        });
-}
-
-function fetchLocationData(address) {
-    const base = 'https://maps.googleapis.com/maps/api/geocode/json';
-    const key = process.env.REACT_APP_GEOCODING_KEY;
-    const url = `${base}?key=${key}&address="${address}"`;
-    return fetch(url)
-        .then(res => res.json());
+async function fetchAddress(buildingName) {
+    const building = await buildingService.getBuildingByName(buildingName);
+    return building.address;
 }
 
 export default mapSlice.reducer;
