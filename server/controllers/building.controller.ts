@@ -13,7 +13,12 @@ async function getBuildings(req, res, next) {
 }
 
 async function getLocationData(req, res, next) {
-    const result = await BuildingService.getLocationData(req.query);
+    let result;
+    if (req.query.address) {
+        result = await BuildingService.getLocationDataByAddress(req.query.address);
+    } else {
+        result = await BuildingService.getLocationData(req.query);
+    }
     res.json(result);
 }
 

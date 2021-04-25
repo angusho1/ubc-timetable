@@ -11,13 +11,13 @@ const initialState = {
 export const loadBuildingLocation = createAsyncThunk('map/loadBuildingLocation',
     async (data) => {
         const building = data.building;
-        const address = await fetchAddress(building);
+        const address = (await buildingService.getBuildingByName(building)).address;
         const geocodingRes = await BuildingService.getLocationDataByAddress(address);
         const location = geocodingRes.results[0].geometry.location;
         const addressComponents = geocodingRes.results[0].address_components;
         return { addressComponents, location, address, building };
     }
-)
+);
 
 export const mapSlice = createSlice({
     name: 'map',
@@ -42,10 +42,5 @@ export const mapSlice = createSlice({
         }
     }
 });
-
-async function fetchAddress(buildingName) {
-    const building = await buildingService.getBuildingByName(buildingName);
-    return building.address;
-}
 
 export default mapSlice.reducer;
