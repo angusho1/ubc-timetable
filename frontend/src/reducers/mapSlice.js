@@ -42,10 +42,10 @@ export const mapSlice = createSlice({
 });
 
 function fetchAddress(building) {
-    return fetch('/buildings.json')
+    return fetch(`/buildings?name=${building}`)
         .then(res => res.json())
         .then(buildingData => {
-            return `${buildingData[building].address}, Vancouver, BC`;
+            return `${buildingData[0].address}, Vancouver, BC`
         });
 }
 

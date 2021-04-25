@@ -2,9 +2,9 @@ import { Collection, Cursor } from 'mongodb';
 import Building from '../models/building.model';
 import db from './db.service';
 
-export async function getBuildings(): Promise<Building[]> {
+export async function getBuildings(query): Promise<Building[]> {
     const collection: Collection = await db.buildingsCollection;
-    const result = collection.find({}).toArray();
+    const result = collection.find(query).toArray();
     return result;
 }
 
