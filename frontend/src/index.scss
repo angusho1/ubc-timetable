@@ -1,3 +1,5 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -33,10 +35,9 @@ h2 {
 }
 
 .container {
-  display: grid;
-  grid-gap: 2vw;
-  padding: 3vw;
-  /* border: 2px solid red; */
+  /* display: grid; */
+  /* grid-gap: 2vw; */
+  /* padding: 3vw; */
 }
 
 ul {
@@ -45,14 +46,13 @@ ul {
 }
 
 .search-wrapper {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-gap: 2vw;
+  grid-gap: 2vw; */
   align-items: start;
 }
 
 .container-box {
-  /* border: 2px solid red; */
   padding: 4vw;
   margin-right: 2vw;
   margin-bottom: 1.5vw;
@@ -62,9 +62,9 @@ ul {
 }
 
 .form-container {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  grid-gap: 10px;
+  grid-gap: 10px; */
 }
 
 .label-container {
@@ -164,7 +164,6 @@ button:focus {
 }
 
 .timetable {
-  /* border: 2px solid red; */
   background-color: #f4f4f4aa;
   border-collapse: collapse;
   table-layout: fixed;
@@ -212,7 +211,6 @@ td {
   cursor: pointer;
   padding: 10px 10px;
   border: none;
-  /* border-radius: 5px; */
   font-size: 16px;
 }
 
@@ -231,10 +229,6 @@ td {
 .timetable-menu-btn.active {
   background-color: #97D4E988;
 }
-
-/* #timetable tr td:nth-child(even), #timetable th tr .day-header:nth-child(even)  {
-  background-color: #ffffffaa;
-} */
 
 .time-column {
   width: 50px;
@@ -308,7 +302,7 @@ td {
   }
 
   .search-wrapper {
-      grid-template-columns: minmax(200px, 1fr) minmax(250px, 2fr);
+      /* grid-template-columns: minmax(200px, 1fr) minmax(250px, 2fr); */
   }
 
   .container-box {
@@ -325,7 +319,6 @@ td {
 
   .container {
       padding: 2vw;
-      /* border: 2px solid red; */
   }
 
   h1 {
@@ -349,7 +342,7 @@ td {
   }
 
   .container {
-      grid-template-columns: 1fr 3fr;
+      /* grid-template-columns: 1fr 3fr; */
       justify-items: center;
   }
 
@@ -362,7 +355,7 @@ td {
   }
 
   .form-container {
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      /* grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); */
   }
 }
 

@@ -85,15 +85,19 @@ export class AppControl extends Component {
 
     render() {
         return (
-            <div className="container">   
-                <div className="search-wrapper">
-                    <SearchForm />
-                    {this.renderResultDisplay()}
+            <div className="container">
+                <div className="row">
+                    <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
+                        <SearchForm />
+                        {this.renderResultDisplay()}
+                    </div>
+                    <div className="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                        <TimetableControl />
+                    </div>
+                    <SinglePointMap currentBuilding={this.state.currentBuilding}
+                                    open={this.state.mapOpen}
+                                    closeModal={this.closeModal}/>
                 </div>
-                <TimetableControl />
-                <SinglePointMap currentBuilding={this.state.currentBuilding}
-                                open={this.state.mapOpen}
-                                closeModal={this.closeModal}/>
             </div>
         )
     }
