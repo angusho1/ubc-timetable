@@ -51,7 +51,7 @@ function SearchForm(props) {
         >   
             <Form className="container-box">
                 <h2>Find a Course:</h2>
-                <div className="form-container">
+                <div className="row gx-2">
                     <SearchInput    id="deptValue"
                                     label="Department" 
                                     placeholder="ex: CPSC"

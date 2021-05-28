@@ -85,13 +85,19 @@ export class AppControl extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid p-4">
                 <div className="row">
-                    <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <SearchForm />
-                        {this.renderResultDisplay()}
+                    <div className="col-xl-3 col-lg-4 col-md-12">
+                        <div className="row">
+                            <div className="col-lg-12 col-sm-4 col-12">
+                                <SearchForm />
+                            </div>
+                            <div className="col-lg-12 col-sm-8 col-12">
+                                {this.renderResultDisplay()}
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                    <div className="col-xl-9 col-lg-8 col-md-12">
                         <TimetableControl />
                     </div>
                     <SinglePointMap currentBuilding={this.state.currentBuilding}

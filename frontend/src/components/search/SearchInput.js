@@ -26,7 +26,7 @@ function SearchInput({ label, ...props }) {
     }
 
     return (
-        <div className="label-container">
+        <div className="col-lg-4 col-sm-12 col-4">
             <label  htmlFor={props.inputId} className="form-label">
                 {label}
             </label>
