@@ -24,9 +24,9 @@ function SearchInput({ label, ...props }) {
     const showPlaceholder = (e) => {
         e.target.placeholder = props.placeholder;
     }
-
+    
     return (
-        <div className="col-lg-4 col-sm-12 col-4">
+        <div className="col">
             <label  htmlFor={props.inputId} className="form-label">
                 {label}
             </label>

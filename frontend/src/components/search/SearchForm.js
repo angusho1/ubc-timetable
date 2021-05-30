@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
@@ -9,6 +9,7 @@ const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
 
 function SearchForm(props) {
+    const [searched, setSearched] = useState(false);
 
     const validationSchema = Yup.object().shape({
         deptValue: Yup.string()
@@ -25,6 +26,7 @@ function SearchForm(props) {
     });
 
     const handleFormSubmit = (values, actions) => {
+        setSearched(true);
         const dept = values.deptValue;
         const course = values.courseValue;
         const section = values.sectionValue;
@@ -51,7 +53,7 @@ function SearchForm(props) {
         >   
             <Form className="container-box">
                 <h2>Find a Course:</h2>
-                <div className="row gx-2">
+                <div className={searched ? "row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 gx-2" : "row gx-2"}>
                     <SearchInput    id="deptValue"
                                     label="Department" 
                                     placeholder="ex: CPSC"
