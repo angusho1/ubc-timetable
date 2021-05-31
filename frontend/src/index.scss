@@ -1,4 +1,10 @@
+$primary: #0055B7;;
+$secondary: #97D4E9;
+$info: #00A7E1;
+$dark: #002145;
+
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+
 
 * {
   box-sizing: border-box;
@@ -40,12 +46,12 @@ ul {
 }
 
 .container-box {
-  padding: 4vw;
-  margin-right: 2vw;
-  margin-bottom: 1.5vw;
-  background: #ffffff88;
-  border-radius: 10px;
-  width: 100%;
+  // padding: 4vw;
+  // margin-right: 2vw;
+  // margin-bottom: 1.5vw;
+  // background: #ffffff88;
+  // border-radius: 10px;
+  // width: 100%;
 }
 
 .form-label {
@@ -109,36 +115,40 @@ input[type='text']:focus {
   border: 2px solid green !important;
 }
 
-.btn {
-  display: block;
-  background: #002145;
-  color: #fff;
-  cursor: pointer;
-  transition: .5s;
-  border: 0;
-  border-radius: 5px;
-  -webkit-appearance: none;
+.card {
+  border-radius: 10px;
 }
 
-#search-btn {
-  width: 100%;
-  padding: 12px 15px;
-  margin: 5px 0;
-  font-size: 16px;
-}
+// .btn {
+//   display: block;
+//   background: #002145;
+//   color: #fff;
+//   cursor: pointer;
+//   transition: .5s;
+//   border: 0;
+//   border-radius: 5px;
+//   -webkit-appearance: none;
+// }
 
-#search-btn:focus {
-  outline: none;
-}
+// #search-btn {
+//   width: 100%;
+//   padding: 12px 15px;
+//   margin: 5px 0;
+//   font-size: 16px;
+// }
 
-.btn:hover {
-  background-color: #002d5c;
-  color: #d8a838;
-}
+// #search-btn:focus {
+//   outline: none;
+// }
 
-button:focus {
-  outline: none;
-}
+// .btn:hover {
+//   background-color: #002d5c;
+//   color: #d8a838;
+// }
+
+// button:focus {
+//   outline: none;
+// }
 
 .timetable {
   background-color: #f4f4f4aa;

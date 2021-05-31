@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export class ResultDisplay extends Component {
     determineClasses() {
-        let classList = 'container-box visible';
+        let classList = 'card p-4 bg-light visible';
         return classList;
     }
 

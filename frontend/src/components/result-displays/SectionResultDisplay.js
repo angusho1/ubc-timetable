@@ -62,7 +62,7 @@ export class SectionResultDisplay extends Component {
 
     renderAddRemoveButton() {
         return (
-            <button className="btn small-btn" onClick={this.props.handleAddRemoveSection}>
+            <button className="btn btn-sm btn-primary" onClick={this.props.handleAddRemoveSection}>
                 { this.getSectionButtonLabel() }
             </button>
         );
@@ -85,10 +85,12 @@ export class SectionResultDisplay extends Component {
                 Building: <b> {building}</b>
                 <br/>
                 Room: <b> {classObj.location.room}</b>
-                <button className="btn small-btn" 
-                        onClick={this.openLocationMap.bind(this, building)}>
-                    Open Map
-                </button>
+                <div>
+                    <button className="btn btn-sm btn-primary" 
+                            onClick={this.openLocationMap.bind(this, building)}>
+                        Open Map
+                    </button>
+                </div>
             </div>) : null;
         if (locationInfo !== null) this.loadBuilding(building);
 

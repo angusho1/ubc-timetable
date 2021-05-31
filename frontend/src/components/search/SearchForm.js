@@ -51,8 +51,8 @@ function SearchForm(props) {
             validationSchema={validationSchema}
             onSubmit={handleFormSubmit}
         >   
-            <Form className="container-box">
-                <h2>Find a Course:</h2>
+            <Form className="card p-4 mb-4 bg-light">
+                <h2 className="card-title">Find a Course:</h2>
                 <div className={searched ? "row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 gx-2" : "row gx-2"}>
                     <SearchInput    id="deptValue"
                                     label="Department" 
@@ -71,7 +71,9 @@ function SearchForm(props) {
                     />
                 </div>
 
-                <input className="btn" type="submit" id="search-btn" value="Search" />
+                <div>
+                    <input className="btn btn-primary" type="submit" value="Search" />
+                </div>
             </Form>
         </Formik>
     )
