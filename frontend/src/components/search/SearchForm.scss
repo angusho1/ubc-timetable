@@ -1,0 +1,29 @@
+input[type='text'] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 0px;
+    border-radius: 5px;
+}
+  
+.error-border {
+    border: 2px solid red !important;
+}
+  
+input[type='text']::placeholder {
+    font-style: italic;
+    color: #999
+}
+  
+input[type='text']:focus {
+    background-color: #97D4E9;
+}
+  
+.label-container input[type='text']:focus-visible {
+    outline: none;
+}
+  
+.searched-input {
+    border: 2px solid green !important;
+}
+  

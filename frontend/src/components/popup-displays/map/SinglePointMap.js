@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PopUp from '../PopUp';
+import './Map.scss';
 
 export class SinglePointMap extends Component {
     constructor(props) {

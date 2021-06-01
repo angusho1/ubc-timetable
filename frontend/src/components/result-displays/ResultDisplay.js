@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './ResultDisplays.scss';
 
 export class ResultDisplay extends Component {
     determineClasses() {

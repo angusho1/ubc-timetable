@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './pop-up.css';
+import './PopUp.scss';
 
 export class PopUp extends Component {
     getVisibility() {
@@ -13,7 +13,7 @@ export class PopUp extends Component {
             <div style={this.getVisibility()} className="pop-up">
                 <div className="pop-up-container">
                     <div id="modal-content-top">
-                        <span className="h3-style" style={{marginTop: '25px'}}>
+                        <span className="h5 text-dark fw-bold" style={{marginTop: '25px'}}>
                             {this.props.header}
                         </span>
                         <span className="close-btn" onClick={this.props.closeModal}>x</span>
