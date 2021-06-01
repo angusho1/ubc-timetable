@@ -88,7 +88,7 @@ export class AppControl extends Component {
 
         return (
             <div className="container-fluid p-4">
-                <div className="row">
+                <div className="row gy-4">
                     <div className="col-xl-3 col-lg-4 col-md-12">
                         <div className="row">
                             <div className={!resultDisplay ? "col" : "col-lg-12 col-md-5 col-sm-4 col-12"}>

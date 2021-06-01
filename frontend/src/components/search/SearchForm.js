@@ -52,7 +52,7 @@ function SearchForm(props) {
             onSubmit={handleFormSubmit}
         >   
             <Form className="card p-4 mb-4 bg-light">
-                <h2 className="card-title">Find a Course:</h2>
+                <div className="card-title fs-5 text-dark">Find a Course:</div>
                 <div className={searched ? "row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 gx-2" : "row gx-2"}>
                     <SearchInput    id="deptValue"
                                     label="Department" 

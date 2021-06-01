@@ -1,8 +1,4 @@
-$primary: #0055B7;;
-$secondary: #97D4E9;
-$info: #00A7E1;
-$dark: #002145;
-
+@import 'theme.scss';
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 
@@ -12,7 +8,6 @@ $dark: #002145;
 }
 
 body {
-  font-family: Open Sans, Helvetica, sans-serif;
   line-height: 1.7;
   background-color: #eeeeee;
   background-image: url('bg.png');
@@ -20,38 +15,9 @@ body {
   background-size: cover;
 }
 
-header {
-  background: #002145;
-  padding: 3vw;
-  border-top: 3px solid white;
-  width: 100%;
-  text-align: center;
-}
-
-h1 {
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 4pt;
-  font-weight: 600;
-  font-size: 16px;
-}
-
-h2 {
-  font-size: 18px;
-}
-
 ul {
   list-style-type: none;
   padding-left: 0px;
-}
-
-.container-box {
-  // padding: 4vw;
-  // margin-right: 2vw;
-  // margin-bottom: 1.5vw;
-  // background: #ffffff88;
-  // border-radius: 10px;
-  // width: 100%;
 }
 
 .form-label {
@@ -118,37 +84,6 @@ input[type='text']:focus {
 .card {
   border-radius: 10px;
 }
-
-// .btn {
-//   display: block;
-//   background: #002145;
-//   color: #fff;
-//   cursor: pointer;
-//   transition: .5s;
-//   border: 0;
-//   border-radius: 5px;
-//   -webkit-appearance: none;
-// }
-
-// #search-btn {
-//   width: 100%;
-//   padding: 12px 15px;
-//   margin: 5px 0;
-//   font-size: 16px;
-// }
-
-// #search-btn:focus {
-//   outline: none;
-// }
-
-// .btn:hover {
-//   background-color: #002d5c;
-//   color: #d8a838;
-// }
-
-// button:focus {
-//   outline: none;
-// }
 
 .timetable {
   background-color: #f4f4f4aa;
@@ -273,56 +208,56 @@ td {
 }
 
 
-@media screen and (min-width: 576px) {
-  header {
-      padding: 2vw;
-      text-align: left;
-      padding-left: 5vw;
-  }
+// @media screen and (min-width: 576px) {
+//   header {
+//       padding: 2vw;
+//       text-align: left;
+//       padding-left: 5vw;
+//   }
 
-  h1 {
-      font-size: 20px;
-      letter-spacing: 6pt;
-  }
+//   h1 {
+//       font-size: 20px;
+//       letter-spacing: 6pt;
+//   }
 
-  h2 {
-      font-size: 20px;
-  }
+//   h2 {
+//       font-size: 20px;
+//   }
 
-  .container-box {
-      padding: 2.5vw;
-  }
-}
+//   .container-box {
+//       padding: 2.5vw;
+//   }
+// }
 
-@media screen and (min-width: 768px) {
-  header {
-      padding: 1.5vw;
-      text-align: left;
-      padding-left: 5vw;
-  }
+// @media screen and (min-width: 768px) {
+//   header {
+//       padding: 1.5vw;
+//       text-align: left;
+//       padding-left: 5vw;
+//   }
 
-  .container {
-      padding: 2vw;
-  }
+//   .container {
+//       padding: 2vw;
+//   }
 
-  h1 {
-      font-size: 22px;
-  }
+//   h1 {
+//       font-size: 22px;
+//   }
 
-  h2 {
-      font-size: 22px;
-  }
+//   h2 {
+//       font-size: 22px;
+//   }
 
-  .container-box {
-      padding: 2vw;
-  }
-}
+//   .container-box {
+//       padding: 2vw;
+//   }
+// }
 
 
-@media screen and (min-width: 992px) {
-  header {
-      padding: 1vw;
-      padding-left: 5vw;
-  }
+// @media screen and (min-width: 992px) {
+//   header {
+//       padding: 1vw;
+//       padding-left: 5vw;
+//   }
 
-}
+// }

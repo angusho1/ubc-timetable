@@ -9,7 +9,7 @@ export class ResultDisplay extends Component {
     render() {
         return (
             <div id="display-box" className={this.determineClasses()}>
-                <h3>{this.props.title}</h3>
+                <div className="card-title h5 fw-bold">{this.props.title}</div>
                 <p>{this.props.subHeading}</p>
                 {this.props.children}
             </div>
