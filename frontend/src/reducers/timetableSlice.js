@@ -1,19 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AcademicSession, AcademicTerm, AcademicYear } from '../data/AcademicCalendar';
-import Cookies from 'universal-cookie';
+import localStorage from 'local-storage';
 
-const cookies = new Cookies();
 const DEFAULT_STARTTIME = 9;
 const DEFAULT_ENDTIME = 18;
 const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 5, 'Sat' : 6};
 
-function updateCookie(name, data) {
-    cookies.set(name, data, { path: '/', maxAge: 1200 });
-}
 
 function getInitialStateSessions() {
-    const existingCookie = cookies.get('sessions');
-    if (typeof existingCookie === 'undefined') {
+    const existingSessions = localStorage.get('sessions');
+    console.log('getting local storage');
+    console.log(existingSessions);
+    if (!existingSessions) {
         const initialSessions = [
             {
                 year: 2020,
@@ -21,15 +19,15 @@ function getInitialStateSessions() {
                 addedSections: []
             }
         ];
-        updateCookie('sessions', initialSessions);
+        localStorage.set('sessions', initialSessions);
         return initialSessions;
     }
-    return existingCookie;
+    return existingSessions;
 }
 
 function getinitialStateTables() {
-    const existingCookie = cookies.get('tables');
-    if (typeof existingCookie === 'undefined') {
+    const existingTables = localStorage.get('tables');
+    if (!existingTables) {
         const initialTables = [
             {
                 tableKey: 'table1',
@@ -46,24 +44,24 @@ function getinitialStateTables() {
                 matrix: initMatrix()
             }
         ];
-        updateCookie('tables', initialTables);
+        localStorage.set('tables', initialTables);
         return initialTables;
     }
     // const session = existingCookie[0];
     // session.addedSections.forEach(section => {
 
     // })
-    return existingCookie;
+    return existingTables;
 }
 
 function getInitialTableKey() {
-    const existingCookie = cookies.get('currentTableKey');
-    if (typeof existingCookie === 'undefined') {
+    const existingKey = localStorage.get('currentTableKey');
+    if (!existingKey) {
         const initialTableKey = 'table1';
-        updateCookie('currentTableKey', initialTableKey);
+        localStorage.set('currentTableKey', initialTableKey);
         return initialTableKey;
     }
-    return existingCookie;
+    return existingKey;
 }
 
 const initialState = {
@@ -79,21 +77,21 @@ export const timetableSlice = createSlice({
         addSection: (state, action) => {
             const { sectionObj } = action.payload;
             addSectionMain(state, sectionObj);
-            updateCookie('sessions', state.sessions);
-            updateCookie('tables', state.tables);
-            updateCookie('currentTableKey', state.currentTableKey);
+            localStorage.set('sessions', state.sessions);
+            localStorage.set('tables', state.tables);
+            localStorage.set('currentTableKey', state.currentTableKey);
         },
         removeSection: (state, action) => {
             const { sectionObj } = action.payload;
             removeSectionMain(state, sectionObj);
-            updateCookie('sessions', state.sessions);
-            updateCookie('tables', state.tables);
-            updateCookie('currentTableKey', state.currentTableKey);
+            localStorage.set('sessions', state.sessions);
+            localStorage.set('tables', state.tables);
+            localStorage.set('currentTableKey', state.currentTableKey);
         },
         switchTable: (state, action) => {
             const tableKey = action.payload.tableKey;
             state.currentTableKey = tableKey;
-            updateCookie('currentTableKey', state.currentTableKey);
+            localStorage.set('currentTableKey', state.currentTableKey);
         }
     }
 });
