@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchSection } from '../../reducers/searchSlice';
-import './result-displays.css';
 
 export class CourseResultDisplay extends Component {
     getTitle() {
@@ -22,7 +21,7 @@ export class CourseResultDisplay extends Component {
             <p>Credits: <b>{courseObj.credits}</b></p>
             <p>Pre-Reqs: <b>{courseObj.prereqs}</b></p>
             <p>Sections:</p>
-            <div className="result-display-item-container">
+            <div className="list-group result-display-item-container">
                 { this.renderSections() }
             </div>
         </div>);

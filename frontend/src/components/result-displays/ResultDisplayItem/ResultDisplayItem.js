@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './index.css'
+import './ResultDisplayItem.scss';
 
 export class ResultDisplayItem extends Component {
     render() {
         return (
-            <div className="result-display-item" onClick={this.props.onClick}>
+            <div className="result-display-item list-group-item list-group-item-action" onClick={this.props.onClick}>
                 <span className="heading">
                     <b>{this.props.heading}</b>
                 </span>

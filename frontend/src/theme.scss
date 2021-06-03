@@ -1,3 +1,4 @@
+// Colours
 $primary: #0055B7;;
 $secondary: #97D4E9;
 $info: #00A7E1;
@@ -5,4 +6,11 @@ $dark: #002145;
 
 $yellow: #d8a838;
 
+// Typography
 $font-family-base: "Open Sans", Helvetica, sans-serif;
+
+// List Groups
+$list-group-hover-bg:               lighten($secondary, 10%);
+// $list-group-active-color:           $component-active-color;
+// $list-group-active-bg:              $component-active-bg;
+// $list-group-active-border-color:    $list-group-active-bg;

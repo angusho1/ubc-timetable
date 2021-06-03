@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchCourse } from '../../reducers/searchSlice';
-import './result-displays.css';
 
 export class DeptResultDisplay extends Component {
     getTitle() {
