@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 // import ResultDisplayItem from './ResultDisplayItem';
-import { loadBuildingLocation } from '../../reducers/mapSlice';
+import { loadBuildingLocation, changeCurrentBuilding } from '../../reducers/mapSlice';
 
 export class SectionResultDisplay extends Component {
     getTitle() {
@@ -56,7 +56,7 @@ export class SectionResultDisplay extends Component {
 
     renderInstructorName(instructor) {
         return (
-            <li><b>{convertName(instructor)}</b></li>
+            <li key={instructor}><b>{convertName(instructor)}</b></li>
         );
     }
 
@@ -69,7 +69,8 @@ export class SectionResultDisplay extends Component {
     }
 
     openLocationMap(building) {
-        this.props.openMap(building);
+        this.props.changeCurrentBuilding({ building });
+        // this.props.openMap(building);
     }
 
     loadBuilding(building) {
@@ -86,7 +87,8 @@ export class SectionResultDisplay extends Component {
                 <br/>
                 Room: <b> {classObj.location.room}</b>
                 <div>
-                    <button className="btn btn-sm btn-primary" 
+                    <button className="btn btn-sm btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#mapModal" type="button"
                             onClick={this.openLocationMap.bind(this, building)}>
                         Open Map
                     </button>
@@ -176,4 +178,4 @@ function lowerLetters(name) {
     return converted.join(' ');
 }
 
-export default connect(null, { loadBuildingLocation })(SectionResultDisplay);
+export default connect(null, { loadBuildingLocation, changeCurrentBuilding })(SectionResultDisplay);

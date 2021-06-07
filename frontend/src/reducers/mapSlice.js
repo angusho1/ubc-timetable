@@ -5,7 +5,8 @@ import BuildingService from '../services/buildingService';
 const initialState = {
     activeLocations: [],
     status: 'idle' | 'pending' | 'successful' | 'failed',
-    error: null
+    error: null,
+    currentBuilding: null
 }
 
 export const loadBuildingLocation = createAsyncThunk('map/loadBuildingLocation',
@@ -23,7 +24,9 @@ export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
-        
+        changeCurrentBuilding: (state, action) => {
+            state.currentBuilding = action.payload.building;
+        }
     },
     extraReducers: {
         [loadBuildingLocation.pending]: state => {
@@ -42,5 +45,7 @@ export const mapSlice = createSlice({
         }
     }
 });
+
+export const { changeCurrentBuilding } = mapSlice.actions;
 
 export default mapSlice.reducer;

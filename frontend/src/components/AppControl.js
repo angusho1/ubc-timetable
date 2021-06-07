@@ -9,15 +9,16 @@ import ErrorDisplay from './result-displays/ErrorDisplay';
 import SinglePointMap from './popup-displays/map/SinglePointMap';
 import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
+import MapModal from './modals/MapModal';
 
 export class AppControl extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mapOpen: false,
-            currentBuilding: null
-        }
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         mapOpen: false,
+    //         currentBuilding: null
+    //     }
+    // }
 
     handleAddRemoveSection = () => {
         const payload = {
@@ -47,14 +48,14 @@ export class AppControl extends Component {
         return `${deptKey} ${courseKey} ${sectionKey}`;
     }
 
-    openMap = (building) => {
-        this.setState({ currentBuilding: building,
-                        mapOpen: true });
-    }
+    // openMap = (building) => {
+    //     this.setState({ currentBuilding: building,
+    //                     mapOpen: true });
+    // }
 
-    closeModal = (e) => {
-        this.setState({ mapOpen: false });
-    }
+    // closeModal = (e) => {
+    //     this.setState({ mapOpen: false });
+    // }
 
     renderResultDisplay() {
         const type = this.props.typeObjectOnDisplay;
@@ -69,7 +70,8 @@ export class AppControl extends Component {
             return (<SectionResultDisplay sectionObj={objectOnDisplay}
                                         handleAddRemoveSection={this.handleAddRemoveSection}
                                         isSectionAdded={this.isSectionAdded()}
-                                        openMap={this.openMap} />);
+                                        // openMap={this.openMap} />);
+                                        />);
         } else {
             return null;
         }
@@ -102,9 +104,10 @@ export class AppControl extends Component {
                     <div className="col-xl-9 col-lg-8 col-md-12">
                         <TimetableControl />
                     </div>
-                    <SinglePointMap currentBuilding={this.state.currentBuilding}
+                    <MapModal />
+                    {/* <SinglePointMap currentBuilding={this.state.currentBuilding}
                                     open={this.state.mapOpen}
-                                    closeModal={this.closeModal}/>
+                                    closeModal={this.closeModal}/> */}
                 </div>
             </div>
         )
