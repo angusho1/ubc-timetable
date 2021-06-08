@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
-// import ResultDisplayItem from './ResultDisplayItem';
 import { loadBuildingLocation, changeCurrentBuilding } from '../../reducers/mapSlice';
+import MapModal from '../modals/MapModal';
 
 export class SectionResultDisplay extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+           showModal: false 
+        }
+    }
+
     getTitle() {
         const sectionObj = this.getSectionObj();
         const sectionCode = sectionObj.sectionCode;
@@ -70,7 +77,7 @@ export class SectionResultDisplay extends Component {
 
     openLocationMap(building) {
         this.props.changeCurrentBuilding({ building });
-        // this.props.openMap(building);
+        this.setState({ showModal: true });
     }
 
     loadBuilding(building) {
@@ -126,10 +133,13 @@ export class SectionResultDisplay extends Component {
 
     render() {
         return (
-            <ResultDisplay  title={this.getTitle()}
-                            subHeading={this.getSubHeading()}>
-                {this.renderDisplayComponents()}
-            </ResultDisplay>
+            <>
+                <ResultDisplay  title={this.getTitle()}
+                                subHeading={this.getSubHeading()}>
+                    {this.renderDisplayComponents()}
+                </ResultDisplay>
+                <MapModal show={this.state.showModal} onHide={() => this.setState({ showModal: false })}/>
+            </>
         )
     }
 }

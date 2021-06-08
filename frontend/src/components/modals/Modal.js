@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function Modal(props) {
     const labelId = `${props.id}Label`;

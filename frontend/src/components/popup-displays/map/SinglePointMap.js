@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-import PopUp from '../PopUp';
 import './Map.scss';
 
 export class SinglePointMap extends Component {
@@ -9,17 +7,15 @@ export class SinglePointMap extends Component {
         this.mapRef = React.createRef();
     }
 
-    // getCurrentLocationData() {
-    //     return this.props.activeLocations.find(location => {
-    //         return location.building === this.props.currentBuilding;
-    //     });
-    // }
-
     getMapOptions(coords) {
         return {
             zoom: 17,
             center: coords
         }
+    }
+
+    componentDidMount() {
+        this.loadMap();
     }
 
     componentDidUpdate(prevProps) {
@@ -31,7 +27,6 @@ export class SinglePointMap extends Component {
     }
 
     loadMap() {
-        // const locationData = this.getCurrentLocationData();
         const locationData = this.props.locationData;
         const building = locationData.building;
         const address = locationData.address;
@@ -52,7 +47,6 @@ export class SinglePointMap extends Component {
         }
 
         this.marker.setMap(null);
-        // const locationData = this.getCurrentLocationData();
         const locationData = this.props.locationData;
         const building = locationData.building;
         const address = locationData.address;
@@ -85,22 +79,10 @@ export class SinglePointMap extends Component {
     }
 
     render() {
-        if (this.props.currentBuilding === null) return null;
-
         return (
             <div ref={this.mapRef} className="map"></div>
-            // <PopUp open={this.props.open}
-            //         header={this.props.currentBuilding}
-            //         closeModal={this.props.closeModal}>
-            //     <div ref={this.mapRef} className="map"></div>
-            // </PopUp>
-        )
+        );
     }
 }
 
-// const mapState = state => ({
-//     activeLocations: state.map.activeLocations
-// });
-
-// export default connect(mapState)(SinglePointMap);
 export default SinglePointMap;
