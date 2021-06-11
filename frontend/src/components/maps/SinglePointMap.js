@@ -68,7 +68,7 @@ export class SinglePointMap extends Component {
     }
 
     createInfoWindow(building, address) {
-        const content = `<h3>${building}</h3>${address}`;
+        const content = `<h5>${building}</h5>${address}`;
         return new window.google.maps.InfoWindow({content});
     }
 

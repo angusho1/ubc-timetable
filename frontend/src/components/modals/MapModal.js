@@ -1,7 +1,8 @@
 import React from 'react';
-import { SinglePointMap } from '../popup-displays/map/SinglePointMap';
+import { SinglePointMap } from '../maps/SinglePointMap';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
+import './MapModal.scss';
 
 
 function MapModal(props) {
@@ -12,17 +13,15 @@ function MapModal(props) {
     }
 
     return (
-        <Modal centered size="lg" id="mapModal" aria-labelledby="mapModalTitle" show={props.show} onHide={props.onHide}>
+        <Modal centered size="lg" id="mapModal" aria-labelledby="mapModalTitle" show={props.show} onHide={props.onHide} dialogClassName="map-modal">
             <Modal.Header closeButton>
                 <Modal.Title id="mapModalTitle">
                     {props.currentBuilding}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div id="map-container">
-                    <SinglePointMap currentBuilding={props.currentBuilding} 
-                                    locationData={getCurrentLocationData()}/>
-                </div>
+                <SinglePointMap currentBuilding={props.currentBuilding} 
+                                locationData={getCurrentLocationData()}/>
             </Modal.Body>
         </Modal>
     )
