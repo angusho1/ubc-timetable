@@ -18,9 +18,9 @@ export class CourseResultDisplay extends Component {
     renderDisplayComponents() {
         const courseObj = this.getCourseObj();
         return (<div>
-            <p>Credits: <b>{courseObj.credits}</b></p>
-            <p>Pre-Reqs: <b>{courseObj.prereqs}</b></p>
-            <p>Sections:</p>
+            <div>Credits: <b>{courseObj.credits}</b></div>
+            <div>Pre-Reqs: <b>{courseObj.prereqs}</b></div>
+            <div>Sections:</div>
             <div className="list-group result-display-item-container">
                 { this.renderSections() }
             </div>

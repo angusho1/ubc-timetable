@@ -30,8 +30,8 @@ export class SectionResultDisplay extends Component {
         const classObjects = sectionObj.classes;
         return (<div>
             { this.renderInstructorDisplay() }
-            <p>Credits: <b>{courseObj.credits}</b></p>
-            <p>Total Seats Remaining: <b>{sectionObj.totalSeatsRem}</b></p>
+            <div>Credits: <b>{courseObj.credits}</b></div>
+            <div>Total Seats Remaining: <b>{sectionObj.totalSeatsRem}</b></div>
             { this.renderAddRemoveButton() }
             { classObjects.map(this.renderClassDisplay.bind(this)) }
         </div>);

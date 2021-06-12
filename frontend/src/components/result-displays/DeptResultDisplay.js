@@ -16,7 +16,7 @@ export class DeptResultDisplay extends Component {
 
     renderDisplayComponents() {
         return (<div>
-            <p>Courses:</p>
+            <div>Courses:</div>
             <div className="result-display-item-container">
                 { this.renderCourses() }
             </div>

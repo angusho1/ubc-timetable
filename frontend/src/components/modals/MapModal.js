@@ -1,7 +1,7 @@
 import React from 'react';
 import { SinglePointMap } from '../maps/SinglePointMap';
 import { connect } from 'react-redux';
-import { Modal } from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal';
 import './MapModal.scss';
 
 
