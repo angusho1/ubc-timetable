@@ -2,7 +2,7 @@ import React from 'react';
 import { SinglePointMap } from '../maps/SinglePointMap';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import './MapModal.scss';
+import './Modal.scss';
 
 
 function MapModal(props) {

@@ -4,11 +4,28 @@ import { connect } from 'react-redux';
 import Timetable from './Timetable';
 import TimetableMenu from './TimetableMenu';
 import { switchTable } from '../../reducers/timetableSlice';
+import ErrorModal from '../modals/ErrorModal';
 
 export class TimetableControl extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+           showModal: false 
+        }
+    }
 
     findTable(tables, tableKey) {
         return tables.find(table => table.tableKey === tableKey);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.state.showModal) {
+            return;
+        } else if (this.props.error !== prevProps.error && this.props.error) {
+            this.setState({ showModal: true });
+        } else {
+            // TODO: Fix subsequent attempts to add section
+        }
     }
 
     render() {
@@ -23,6 +40,9 @@ export class TimetableControl extends Component {
                                 timetables={timetables} 
                                 switchTable={this.props.switchTable} />
                 <Timetable table={currentTable} days={days} />
+                <ErrorModal show={this.state.showModal} 
+                            onHide={() => this.setState({ showModal: false })}
+                            message={this.props.error} />
             </div>
         )
     }
@@ -30,7 +50,8 @@ export class TimetableControl extends Component {
 
 const mapState = state => ({
     currentTableKey: state.timetable.currentTableKey,
-    timetables: state.timetable.tables
+    timetables: state.timetable.tables,
+    error: state.timetable.error
 });
 
 export default connect(mapState, { switchTable })(TimetableControl);

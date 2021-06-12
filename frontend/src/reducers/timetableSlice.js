@@ -9,8 +9,6 @@ const DAY_MAP = {'Sun' : 0, 'Mon' : 1, 'Tue' : 2, 'Wed' : 3, 'Thu' : 4, 'Fri' : 
 
 function getInitialStateSessions() {
     const existingSessions = localStorage.get('sessions');
-    console.log('getting local storage');
-    console.log(existingSessions);
     if (!existingSessions) {
         const initialSessions = [
             {
@@ -47,10 +45,6 @@ function getinitialStateTables() {
         localStorage.set('tables', initialTables);
         return initialTables;
     }
-    // const session = existingCookie[0];
-    // session.addedSections.forEach(section => {
-
-    // })
     return existingTables;
 }
 
@@ -64,10 +58,17 @@ function getInitialTableKey() {
     return existingKey;
 }
 
+function updateLocalStorage(state) {
+    localStorage.set('sessions', state.sessions);
+    localStorage.set('tables', state.tables);
+    localStorage.set('currentTableKey', state.currentTableKey);
+}
+
 const initialState = {
     currentTableKey: getInitialTableKey(),
     sessions: getInitialStateSessions(),
-    tables: getinitialStateTables()
+    tables: getinitialStateTables(),
+    error: null
 }
 
 export const timetableSlice = createSlice({
@@ -77,16 +78,12 @@ export const timetableSlice = createSlice({
         addSection: (state, action) => {
             const { sectionObj } = action.payload;
             addSectionMain(state, sectionObj);
-            localStorage.set('sessions', state.sessions);
-            localStorage.set('tables', state.tables);
-            localStorage.set('currentTableKey', state.currentTableKey);
+            updateLocalStorage(state);
         },
         removeSection: (state, action) => {
             const { sectionObj } = action.payload;
             removeSectionMain(state, sectionObj);
-            localStorage.set('sessions', state.sessions);
-            localStorage.set('tables', state.tables);
-            localStorage.set('currentTableKey', state.currentTableKey);
+            updateLocalStorage(state);
         },
         switchTable: (state, action) => {
             const tableKey = action.payload.tableKey;
@@ -142,7 +139,7 @@ function addSectionMain(state, sectionObj) {
 
     const editQueue = getTablesToEdit(state, sectionObj, session);
     if (hasTimetableConflicts(editQueue)) {
-        console.log(`Cannot add section ${sectionCode}`);
+        state.error = `Cannot add section ${sectionCode}`;
         return;
     };
 
@@ -152,6 +149,7 @@ function addSectionMain(state, sectionObj) {
     }
 
     stateSession.addedSections.push(sectionCode);
+    state.error = null;
 }
 
 function hasTimetableConflicts(editQueue) {
