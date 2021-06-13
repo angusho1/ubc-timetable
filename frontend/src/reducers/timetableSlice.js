@@ -89,6 +89,9 @@ export const timetableSlice = createSlice({
             const tableKey = action.payload.tableKey;
             state.currentTableKey = tableKey;
             localStorage.set('currentTableKey', state.currentTableKey);
+        },
+        setError: (state, action) => {
+            state.error = action.payload.error
         }
     }
 });
@@ -431,6 +434,6 @@ function isDayAlternating(day) {
     return (asterisk.test(day) || caret.test(day));
 }
 
-export const { addSection, removeSection, switchTable } = timetableSlice.actions;
+export const { addSection, removeSection, switchTable, setError } = timetableSlice.actions;
 
 export default timetableSlice.reducer;

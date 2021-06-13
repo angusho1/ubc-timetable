@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Timetable from './Timetable';
 import TimetableMenu from './TimetableMenu';
-import { switchTable } from '../../reducers/timetableSlice';
+import { switchTable, setError } from '../../reducers/timetableSlice';
 import ErrorModal from '../modals/ErrorModal';
 
 export class TimetableControl extends Component {
@@ -19,13 +19,14 @@ export class TimetableControl extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.showModal) {
-            return;
-        } else if (this.props.error !== prevProps.error && this.props.error) {
+        if (this.props.error !== prevProps.error && this.props.error) {
             this.setState({ showModal: true });
-        } else {
-            // TODO: Fix subsequent attempts to add section
         }
+    }
+
+    hideErrorModal = () => {
+        this.setState({ showModal: false });
+        this.props.setError({ error: null });
     }
 
     render() {
@@ -41,7 +42,7 @@ export class TimetableControl extends Component {
                                 switchTable={this.props.switchTable} />
                 <Timetable table={currentTable} days={days} />
                 <ErrorModal show={this.state.showModal} 
-                            onHide={() => this.setState({ showModal: false })}
+                            onHide={this.hideErrorModal}
                             message={this.props.error} />
             </div>
         )
@@ -54,4 +55,4 @@ const mapState = state => ({
     error: state.timetable.error
 });
 
-export default connect(mapState, { switchTable })(TimetableControl);
+export default connect(mapState, { switchTable, setError })(TimetableControl);
