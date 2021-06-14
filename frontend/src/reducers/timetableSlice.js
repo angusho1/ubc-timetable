@@ -142,7 +142,7 @@ function addSectionMain(state, sectionObj) {
 
     const editQueue = getTablesToEdit(state, sectionObj, session);
     if (hasTimetableConflicts(editQueue)) {
-        state.error = `Cannot add section ${sectionCode}`;
+        state.error = `The section '${sectionCode}' couldn't be added because it conflicts with another course in your timetable.`;
         return;
     };
 

@@ -1,19 +1,23 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import './Modal.scss';
 
 function ErrorModal(props) {
     return (
-        <Modal size="sm" id="errorModal" aria-labelledby="errorModalTitle" show={props.show} onHide={props.onHide} dialogClassName="map-modal">
+        <Modal id="errorModal" aria-labelledby="errorModalTitle" show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
                 <Modal.Title id="errorModalTitle">
-                    {props.message}
+                    <i className="bi bi-exclamation-circle text-danger align-top"></i>
+                    <span className="m-3">Timetable Conflict</span>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* TODO: Remove this hardcoded error message */}
-                The section couldn't be added because it conflicts with another section.
+                {props.message}
             </Modal.Body>
+            <Modal.Footer>
+                <Button variant="dark" onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
         </Modal>
     )
 }
