@@ -1,26 +1,16 @@
-import React, { Component } from 'react';
-import ResultDisplay from './ResultDisplay';
+import React from 'react';
 
-export class ErrorDisplay extends Component {
-    renderDisplayComponents() {
-        const errorMessage = this.props.error;
-        return (
-            <h4 style={this.errorStyle}>{errorMessage}</h4>
-        );
-    }
+export default function ErrorDisplay(props) {
 
-    errorStyle = {
-        fontStyle: 'italic'
-    }
-
-    render() {
-        return (
-            <ResultDisplay  title={"Search Not Found"}
-                            subHeading={null}>
-                {this.renderDisplayComponents()}
-            </ResultDisplay>
-        )
-    }
+    return (
+        <div id="display-box" className="card p-4 bg-light visible">
+            <span className="card-title fs-5 fw-bold">
+                <i className="bi bi-exclamation-diamond text-danger fs-3 me-2 mt-0 pt-0" style={{ lineHeight: '0' }}></i>
+                Search Not Found
+            </span>
+            <span>
+                {props.error}
+            </span>
+        </div>
+    );
 }
-
-export default ErrorDisplay;
