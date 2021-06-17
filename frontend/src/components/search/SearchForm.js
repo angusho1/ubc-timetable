@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { searchDept, searchCourse, searchSection } from '../../reducers/searchSlice';
+import { searchDept, searchCourse, searchSection, getDeptList } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -46,6 +46,11 @@ function SearchForm(props) {
         }
     }
 
+    const getDeptList = () => {
+        const session = { year: 2020, season: 'W' };
+        props.getDeptList({ session });
+    };
+
     return (
         <Formik
             initialValues={{ deptValue: '', courseValue: '', sectionValue: ''}}
@@ -74,12 +79,13 @@ function SearchForm(props) {
 
                 <div>
                     <input className="btn btn-primary" type="submit" value="Search" />
+                    <button className="ms-2 btn btn-dark" type="button" onClick={getDeptList}>Browse</button>
                 </div>
             </Form>
         </Formik>
     )
 }
 
-const mapDispatch = { searchDept, searchCourse, searchSection };
+const mapDispatch = { searchDept, searchCourse, searchSection, getDeptList };
 
 export default connect(null, mapDispatch)(SearchForm);

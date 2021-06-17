@@ -3,7 +3,7 @@ import { SearchType } from '../data/SearchType';
 
 const initialState = {
     objectOnDisplay: null,
-    typeObjectOnDisplay: null,
+    typeObjectOnDisplay: SearchType.SUBJECTS,
     currentSession: {
         year: 2020,     // TODO: Change hardcode
         season: 'W'

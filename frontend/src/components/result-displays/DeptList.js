@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
@@ -11,22 +11,29 @@ function DeptList(props) {
         return (<ResultDisplayItem key={dept.subjCode}
                                     heading={dept.subjCode}
                                     label={dept.title}
-                                    onClick={() => props.searchCourse(deptSearchParams)} />);
+                                    onClick={() => props.searchDept(deptSearchParams)} />);
     }
 
     const render = () => {
-        if (!props.objectOnDisplay) {
-            const session = { year: 2020, season: 'W' };
-            props.getDeptList({ session });
+        if (!props.deptList) {
             return null;
         } else {
             return props.deptList.map(dept => renderDept(dept));
         }
     }
 
+    useEffect(() => {
+        if (!props.deptList) {
+            const session = { year: 2020, season: 'W' };
+            props.getDeptList({ session });
+        }
+    });
+
     return (
         <ResultDisplay title="Find by Subject" subHeading="">
-            {render()}
+            <div className="list-group result-display-item-container">
+                {render()}
+            </div>
         </ResultDisplay>
     )
 }

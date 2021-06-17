@@ -54,8 +54,10 @@ export class AppControl extends Component {
                                         handleAddRemoveSection={this.handleAddRemoveSection}
                                         isSectionAdded={this.isSectionAdded()}
                                         />);
-        } else {
+        } else if (type === SearchType.SUBJECTS) {
             return (<DeptList deptList={objectOnDisplay} />);
+        } else {
+            return null;
         }
     }
 
