@@ -8,6 +8,7 @@ import SectionResultDisplay from './result-displays/SectionResultDisplay';
 import ErrorDisplay from './result-displays/ErrorDisplay';
 import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
+import DeptList from './result-displays/DeptList';
 
 export class AppControl extends Component {
 
@@ -54,7 +55,7 @@ export class AppControl extends Component {
                                         isSectionAdded={this.isSectionAdded()}
                                         />);
         } else {
-            return null;
+            return (<DeptList deptList={objectOnDisplay} />);
         }
     }
 

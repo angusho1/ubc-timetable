@@ -12,6 +12,13 @@ const initialState = {
     error: null
 }
 
+export const getDeptList = createAsyncThunk('search/getDeptList',
+    async (searchData) => {
+        const session = searchData.session;
+        return getDeptListBySession(session);
+    }
+);
+
 export const searchDept = createAsyncThunk('search/searchDept', 
     async (searchData) => {
         const deptKey = formatKey(searchData.dept);
@@ -51,6 +58,14 @@ export const searchSlice = createSlice({
         }
     },
     extraReducers: {
+        [getDeptList.pending]: state => {
+            setPendingSearch(state, SearchType.SUBJECTS);
+        },
+        [getDeptList.fulfilled]: (state, action) => {
+            setSuccessfulSearch(state, action);
+        },
+        [getDeptList.rejected]: setFailedSearch,
+
         [searchDept.pending]: state => {
             setPendingSearch(state, SearchType.DEPT);
         },
@@ -92,6 +107,21 @@ function setFailedSearch(state, action) {
     state.status = 'failed';
     state.error = action.error.message;
     state.objectOnDisplay = null;
+}
+
+function getDeptListBySession(session) {
+    return fetchData()
+        .then(data => {
+            const courseData = data.departments;
+            const deptList = Object.values(courseData)
+                .map(dept => { 
+                    return { subjCode: dept.subjCode,
+                            title: dept.title,
+                            faculty: dept.faculty,
+                            session };
+                });
+            return deptList;
+        });
 }
 
 // TODO: Use session in actual search
