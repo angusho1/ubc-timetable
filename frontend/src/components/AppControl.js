@@ -77,10 +77,10 @@ export class AppControl extends Component {
                 <div className="row gy-4">
                     <div className="col-xl-3 col-lg-4 col-md-12">
                         <div className="row">
-                            <div className={!resultDisplay ? "col" : "col-lg-12 col-md-5 col-sm-4 col-12"}>
+                            <div className={"col-lg-12 col-md-5 col-sm-4 col-12"}>
                                 <SearchForm />
                             </div>
-                            <div className={!resultDisplay ? "" : "col-lg-12 col-md-7 col-sm-8 col-12"}>
+                            <div className={"col-lg-12 col-md-7 col-sm-8 col-12"}>
                                 {resultDisplay}
                             </div>
                         </div>

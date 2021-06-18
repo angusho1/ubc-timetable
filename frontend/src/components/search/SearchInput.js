@@ -5,12 +5,13 @@ function SearchInput({ label, ...props }) {
     const [field, meta, helpers] = useField(props);
 
     const determineClasses = () => {
+        const _default = '';
         if (meta.error) {
-            return 'error-border';
+            return `${_default} error-border`;
         } else if (meta.touched && field.value) {
-            return 'searched-input';
+            return `${_default} searched-input`;
         }
-        return '';
+        return _default;
     }
 
     const hidePlaceHolder = (e) => {
