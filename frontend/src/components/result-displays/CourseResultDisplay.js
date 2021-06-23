@@ -7,19 +7,18 @@ import { searchSection } from '../../reducers/searchSlice';
 export class CourseResultDisplay extends Component {
     getTitle() {
         const courseObj = this.getCourseObj();
-        const dept = courseObj.deptObj.subjCode;
-        return `${dept} ${courseObj.course}`;
+        return `${getDeptKey(courseObj)} ${getCourseKey(courseObj)}`;
     }
 
     getSubHeading() {
-        return this.props.courseObj.courseTitle;
+        return getCourseTitle(this.getCourseObj());
     }
 
     renderDisplayComponents() {
         const courseObj = this.getCourseObj();
         return (<div>
-            <div>Credits: <b>{courseObj.credits}</b></div>
-            <div>Pre-Reqs: <b>{courseObj.prereqs}</b></div>
+            <div>Credits: <b>{getCourseCredits(courseObj)}</b></div>
+            <div>Pre-Reqs: <b>{getCoursePreReqs(courseObj)}</b></div>
             <div>Sections:</div>
             <div className="list-group result-display-item-container">
                 { this.renderSections() }
@@ -29,12 +28,12 @@ export class CourseResultDisplay extends Component {
 
     renderSections() {
         const courseObj = this.getCourseObj();
-        const sections = Object.values(courseObj.sections);
+        const sections = Object.values(getCourseSections(courseObj));
         return sections.map((section) => {
             const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
-            const deptKey = courseObj.deptObj.subjCode;
-            const courseKey = courseObj.course;
-            const sectionKey = section.section;
+            const deptKey = getDeptKey(courseObj);
+            const courseKey = getCourseKey(courseObj);
+            const sectionKey = getSectionKey(section);
             const sectionSearchParams = { dept: deptKey, course: courseKey, section: sectionKey, session };
             return (<ResultDisplayItem key={section.sectionCode}
                                         heading={section.sectionCode}
@@ -55,6 +54,34 @@ export class CourseResultDisplay extends Component {
             </ResultDisplay>
         )
     }
+}
+
+function getCourseTitle(courseObj) {
+    return courseObj.courseTitle;
+}
+
+function getCourseCredits(courseObj) {
+    return courseObj.credits;
+}
+
+function getCoursePreReqs(courseObj) {
+    return courseObj.prereqs;
+}
+
+function getCourseSections(courseObj) {
+    return courseObj.sections;
+}
+
+function getDeptKey(courseObj) {
+    return courseObj.deptObj.subjCode;
+}
+
+function getCourseKey(courseObj) {
+    return courseObj.course;
+}
+
+function getSectionKey(sectionObj) {
+    return sectionObj.section;
 }
 
 export default connect(null, { searchSection })(CourseResultDisplay);

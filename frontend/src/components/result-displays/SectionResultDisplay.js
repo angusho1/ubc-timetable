@@ -14,8 +14,8 @@ export class SectionResultDisplay extends Component {
 
     getTitle() {
         const sectionObj = this.getSectionObj();
-        const sectionCode = sectionObj.sectionCode;
-        const activity = sectionObj.activity;
+        const sectionCode = getSectionCode(sectionObj);
+        const activity = getSectionActivity(sectionObj);
         return `${sectionCode} (${activity})`;
     }
 
@@ -25,20 +25,19 @@ export class SectionResultDisplay extends Component {
     }
 
     renderDisplayComponents() {
-        const courseObj = this.getCourseObj();
         const sectionObj = this.getSectionObj();
-        const classObjects = sectionObj.classes;
+        const classObjects = getSectionClasses(sectionObj);
         return (<div>
             { this.renderInstructorDisplay() }
-            <div>Credits: <b>{courseObj.credits}</b></div>
-            <div>Total Seats Remaining: <b>{sectionObj.totalSeatsRem}</b></div>
+            <div>Credits: <b>{getCredits(sectionObj)}</b></div>
+            <div>Total Seats Remaining: <b>{getSectionTotalSeatsRemaining(sectionObj)}</b></div>
             { this.renderAddRemoveButton() }
             { classObjects.map(this.renderClassDisplay.bind(this)) }
         </div>);
     }
 
     renderInstructorDisplay() {
-        const instructors = this.getSectionObj().instructors;
+        const instructors = getSectionInstructors(this.getSectionObj());
         if (instructors.length > 1) {
             const style = { paddingBottom: '10px'};
             return (
@@ -143,6 +142,31 @@ export class SectionResultDisplay extends Component {
         )
     }
 }
+
+function getSectionCode(sectionObj) {
+    return sectionObj.sectionCode;
+}
+
+function getSectionActivity(sectionObj) {
+    return sectionObj.activity;
+}
+
+function getCredits(sectionObj) {
+    return sectionObj.courseObj.credits;
+}
+
+function getSectionClasses(sectionObj) {
+    return sectionObj.classes;
+}
+
+function getSectionTotalSeatsRemaining(sectionObj) {
+    return sectionObj.totalSeatsRem;
+}
+
+function getSectionInstructors(sectionObj) {
+    return sectionObj.instructors;
+}
+
 
 /** 
  * Converts an instructor's name to regular casing

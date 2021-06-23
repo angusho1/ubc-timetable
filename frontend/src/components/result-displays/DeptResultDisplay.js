@@ -6,12 +6,12 @@ import { searchCourse } from '../../reducers/searchSlice';
 
 export class DeptResultDisplay extends Component {
     getTitle() {
-        const obj = this.props.deptObj;
-        return `${obj.title} (${obj.subjCode})`;
+        const deptObj = this.getDeptObj();
+        return `${getDeptTitle(deptObj)} (${getDeptKey(deptObj)})`;
     }
 
     getSubHeading() {
-        return this.props.deptObj.faculty;
+        return getFacultyName(this.getDeptObj());
     }
 
     renderDisplayComponents() {
@@ -24,11 +24,12 @@ export class DeptResultDisplay extends Component {
     }
 
     renderCourses() {
-        const courses = Object.values(this.props.deptObj.courses);
+        const deptObj = this.getDeptObj();
+        const courses = Object.values(getDeptCourses(deptObj));
         return courses.map((course) => {
             const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
-            const deptKey = this.props.deptObj.subjCode;
-            const courseKey = course.course;
+            const deptKey = getDeptKey(deptObj);
+            const courseKey = getCourseKey(course);
             const courseSearchParams = { dept: deptKey, course: courseKey, session };
             return (<ResultDisplayItem key={course.courseCode}
                                         heading={course.courseCode}
@@ -36,6 +37,10 @@ export class DeptResultDisplay extends Component {
                                         onClick={this.props.searchCourse.bind(this, courseSearchParams)} />);
         });
         
+    }
+
+    getDeptObj() {
+        return this.props.deptObj;
     }
 
     render() {
@@ -46,6 +51,26 @@ export class DeptResultDisplay extends Component {
             </ResultDisplay>
         )
     }
+}
+
+function getDeptTitle(deptObj) {
+    return deptObj.title;
+}
+
+function getDeptKey(deptObj) {
+    return deptObj.subjCode;
+}
+
+function getFacultyName(deptObj) {
+    return deptObj.faculty;
+}
+
+function getDeptCourses(deptObj) {
+    return deptObj.courses;
+}
+
+function getCourseKey(courseObj) {
+    return courseObj.course;
 }
 
 export default connect(null, { searchCourse })(DeptResultDisplay);
