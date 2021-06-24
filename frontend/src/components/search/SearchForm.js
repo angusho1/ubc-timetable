@@ -35,7 +35,7 @@ function SearchForm(props) {
     }
 
     const initSearch = (dept, course, section) => {
-        const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
+        const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
 
         if (section.length > 0) {
             props.searchSection({ dept, course, section, session });
@@ -47,7 +47,7 @@ function SearchForm(props) {
     }
 
     const getDeptList = () => {
-        const session = { year: 2020, season: 'W' };
+        const session = { year: 2021, season: 'W' };
         props.getDeptList({ session });
     };
 

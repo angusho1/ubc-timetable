@@ -27,7 +27,7 @@ export class DeptResultDisplay extends Component {
         const deptObj = this.getDeptObj();
         const courses = Object.values(getDeptCourses(deptObj));
         return courses.map((course) => {
-            const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
+            const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
             const deptKey = getDeptKey(deptObj);
             const courseKey = getCourseKey(course);
             const courseSearchParams = { dept: deptKey, course: courseKey, session };

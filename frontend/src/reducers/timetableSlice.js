@@ -12,7 +12,7 @@ function getInitialStateSessions() {
     if (!existingSessions) {
         const initialSessions = [
             {
-                year: 2020,
+                year: 2021,
                 season: 'W',
                 addedSections: []
             }
@@ -31,14 +31,14 @@ function getinitialStateTables() {
                 tableKey: 'table1',
                 startTime: DEFAULT_STARTTIME,
                 endTime: DEFAULT_ENDTIME,
-                term: '2020 W1',
+                term: '2021 W1',
                 matrix: initMatrix()
             },
             {
                 tableKey: 'table2',
                 startTime: DEFAULT_STARTTIME,
                 endTime: DEFAULT_ENDTIME,
-                term: '2020 W2',
+                term: '2021 W2',
                 matrix: initMatrix()
             }
         ];

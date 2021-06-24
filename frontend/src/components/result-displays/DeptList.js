@@ -24,7 +24,7 @@ function DeptList(props) {
 
     useEffect(() => {
         if (!props.deptList) {
-            const session = { year: 2020, season: 'W' };
+            const session = { year: 2021, season: 'W' };
             props.getDeptList({ session });
         }
     });

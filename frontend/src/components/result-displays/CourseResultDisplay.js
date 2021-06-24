@@ -30,7 +30,7 @@ export class CourseResultDisplay extends Component {
         const courseObj = this.getCourseObj();
         const sections = Object.values(getCourseSections(courseObj));
         return sections.map((section) => {
-            const session = { year: 2020, season: 'W' } // TODO: Remove hardcoded session
+            const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
             const deptKey = getDeptKey(courseObj);
             const courseKey = getCourseKey(courseObj);
             const sectionKey = getSectionKey(section);

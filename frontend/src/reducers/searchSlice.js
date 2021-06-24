@@ -5,7 +5,7 @@ const initialState = {
     objectOnDisplay: null,
     typeObjectOnDisplay: SearchType.SUBJECTS,
     currentSession: {
-        year: 2020,     // TODO: Change hardcode
+        year: 2021,     // TODO: Change hardcode
         season: 'W'
     },
     status: 'idle' | 'pending' | 'successful' | 'failed',
