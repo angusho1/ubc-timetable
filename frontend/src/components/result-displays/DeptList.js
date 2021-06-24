@@ -3,14 +3,16 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchDept, getDeptList } from '../../reducers/searchSlice';
+import { getDeptTitle, getDeptKey } from '../../utils/selectors.js';
 
 function DeptList(props) {
 
     const renderDept = (dept) => {
-        const deptSearchParams = { dept: dept.subjCode };
-        return (<ResultDisplayItem key={dept.subjCode}
-                                    heading={dept.subjCode}
-                                    label={dept.title}
+        const deptKey = getDeptKey(dept);
+        const deptSearchParams = { dept: deptKey };
+        return (<ResultDisplayItem key={deptKey}
+                                    heading={deptKey}
+                                    label={getDeptTitle(dept)}
                                     onClick={() => props.searchDept(deptSearchParams)} />);
     }
 

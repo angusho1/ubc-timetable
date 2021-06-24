@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchSection } from '../../reducers/searchSlice';
+import { getCourseDeptKey, getCourseKey, getCourseTitle, getCourseCredits, getCoursePreReqs, getCourseSections, getSectionKey } from '../../utils/selectors.js';
 
 export class CourseResultDisplay extends Component {
     getTitle() {
         const courseObj = this.getCourseObj();
-        return `${getDeptKey(courseObj)} ${getCourseKey(courseObj)}`;
+        return `${getCourseDeptKey(courseObj)} ${getCourseKey(courseObj)}`;
     }
 
     getSubHeading() {
@@ -31,7 +32,7 @@ export class CourseResultDisplay extends Component {
         const sections = Object.values(getCourseSections(courseObj));
         return sections.map((section) => {
             const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
-            const deptKey = getDeptKey(courseObj);
+            const deptKey = getCourseDeptKey(courseObj);
             const courseKey = getCourseKey(courseObj);
             const sectionKey = getSectionKey(section);
             const sectionSearchParams = { dept: deptKey, course: courseKey, section: sectionKey, session };
@@ -54,34 +55,6 @@ export class CourseResultDisplay extends Component {
             </ResultDisplay>
         )
     }
-}
-
-function getCourseTitle(courseObj) {
-    return courseObj.courseTitle;
-}
-
-function getCourseCredits(courseObj) {
-    return courseObj.credits;
-}
-
-function getCoursePreReqs(courseObj) {
-    return courseObj.prereqs;
-}
-
-function getCourseSections(courseObj) {
-    return courseObj.sections;
-}
-
-function getDeptKey(courseObj) {
-    return courseObj.deptObj.subjCode;
-}
-
-function getCourseKey(courseObj) {
-    return courseObj.course;
-}
-
-function getSectionKey(sectionObj) {
-    return sectionObj.section;
 }
 
 export default connect(null, { searchSection })(CourseResultDisplay);

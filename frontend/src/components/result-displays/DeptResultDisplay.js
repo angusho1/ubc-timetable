@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchCourse } from '../../reducers/searchSlice';
+import { getDeptTitle, getDeptKey, getFacultyName, getDeptCourses, getCourseKey } from '../../utils/selectors.js';
 
 export class DeptResultDisplay extends Component {
     getTitle() {
@@ -51,26 +52,6 @@ export class DeptResultDisplay extends Component {
             </ResultDisplay>
         )
     }
-}
-
-function getDeptTitle(deptObj) {
-    return deptObj.title;
-}
-
-function getDeptKey(deptObj) {
-    return deptObj.subjCode;
-}
-
-function getFacultyName(deptObj) {
-    return deptObj.faculty;
-}
-
-function getDeptCourses(deptObj) {
-    return deptObj.courses;
-}
-
-function getCourseKey(courseObj) {
-    return courseObj.course;
 }
 
 export default connect(null, { searchCourse })(DeptResultDisplay);

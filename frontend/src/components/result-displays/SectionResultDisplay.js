@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import { loadBuildingLocation, changeCurrentBuilding } from '../../reducers/mapSlice';
 import MapModal from '../modals/MapModal';
+import { getSectionCode, getSectionActivity, getSectionClasses, getCredits, getSectionTotalSeatsRemaining, getSectionInstructors } from '../../utils/selectors.js';
 
 export class SectionResultDisplay extends Component {
     constructor(props) {
@@ -141,30 +142,6 @@ export class SectionResultDisplay extends Component {
             </>
         )
     }
-}
-
-function getSectionCode(sectionObj) {
-    return sectionObj.sectionCode;
-}
-
-function getSectionActivity(sectionObj) {
-    return sectionObj.activity;
-}
-
-function getCredits(sectionObj) {
-    return sectionObj.courseObj.credits;
-}
-
-function getSectionClasses(sectionObj) {
-    return sectionObj.classes;
-}
-
-function getSectionTotalSeatsRemaining(sectionObj) {
-    return sectionObj.totalSeatsRem;
-}
-
-function getSectionInstructors(sectionObj) {
-    return sectionObj.instructors;
 }
 
 
