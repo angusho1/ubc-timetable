@@ -15,7 +15,8 @@ const initialState = {
 export const getDeptList = createAsyncThunk('search/getDeptList',
     async (searchData) => {
         const session = searchData.session;
-        return getDeptListBySession(session);
+        const scraperType = searchData.scraperType;
+        return getDeptListBySession(session, scraperType);
     }
 );
 
@@ -23,7 +24,8 @@ export const searchDept = createAsyncThunk('search/searchDept',
     async (searchData) => {
         const deptKey = formatKey(searchData.dept);
         const session = searchData.session;
-        return searchDeptByKey(deptKey, session);
+        const scraperType = searchData.scraperType;
+        return searchDeptByKey(deptKey, session, scraperType);
     }
 );
 
@@ -32,7 +34,8 @@ export const searchCourse = createAsyncThunk('search/searchCourse',
         const deptKey = formatKey(searchData.dept);
         const courseKey = formatKey(searchData.course);
         const session = searchData.session;
-        return searchCourseByKey(deptKey, courseKey, session);
+        const scraperType = searchData.scraperType;
+        return searchCourseByKey(deptKey, courseKey, session, scraperType);
     }
 );
 
@@ -42,7 +45,8 @@ export const searchSection = createAsyncThunk('search/searchSection',
         const courseKey = formatKey(searchData.course);
         const sectionKey = formatKey(searchData.section);
         const session = searchData.session;
-        return searchSectionByKey(deptKey, courseKey, sectionKey, session);
+        const scraperType = searchData.scraperType;
+        return searchSectionByKey(deptKey, courseKey, sectionKey, session, scraperType);
     }
 );
 

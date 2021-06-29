@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import { SearchType } from '../data/SearchType';
 import SearchForm from './search/SearchForm';
 import TimetableControl from './timetable/TimetableControl';
@@ -9,6 +9,9 @@ import ErrorDisplay from './result-displays/ErrorDisplay';
 import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
 import DeptList from './result-displays/DeptList';
+import { ScraperType } from '../data/ScraperType';
+
+export const ScraperContext = createContext(ScraperType.NATIVE);
 
 export class AppControl extends Component {
 
@@ -73,6 +76,7 @@ export class AppControl extends Component {
         const resultDisplay = this.renderResultDisplay();
 
         return (
+            <ScraperContext.Provider value={ScraperType.NATIVE}>
             <div className="container-fluid p-4">
                 <div className="row gy-4">
                     <div className="col-xl-3 col-lg-4 col-md-12">
@@ -90,6 +94,7 @@ export class AppControl extends Component {
                     </div>
                 </div>
             </div>
+            </ScraperContext.Provider>
         )
     }
 }

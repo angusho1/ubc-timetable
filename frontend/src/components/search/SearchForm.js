@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { searchDept, searchCourse, searchSection, getDeptList } from '../../reducers/searchSlice';
 import SearchInput from './SearchInput';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import './SearchForm.scss';
+import { ScraperContext } from '../AppControl';
 
 const DEPT_REGEX = /^\s*[a-z]{2,4}\s*$/i;
 const COURSE_SECTION_REGEX = /^\s*[a-z0-9]{3,4}\s*$/i;
 
 function SearchForm(props) {
     const [searched, setSearched] = useState(false);
+    const scraperType = useContext(ScraperContext);
 
     const validationSchema = Yup.object().shape({
         deptValue: Yup.string()
@@ -38,11 +40,11 @@ function SearchForm(props) {
         const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
 
         if (section.length > 0) {
-            props.searchSection({ dept, course, section, session });
+            props.searchSection({ dept, course, section, session, scraperType });
         } else if (course.length > 0) {
-            props.searchCourse({ dept, course, session });
+            props.searchCourse({ dept, course, session, scraperType });
         } else {
-            props.searchDept({ dept, session });
+            props.searchDept({ dept, session, scraperType });
         }
     }
 
