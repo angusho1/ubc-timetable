@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchDept, getDeptList } from '../../reducers/searchSlice';
 import { getDeptTitle, getDeptKey } from '../../utils/selectors.js';
+import { ScraperContext } from '../AppControl';
 
 function DeptList(props) {
+    const scraperType = useContext(ScraperContext);
 
     const renderDept = (dept) => {
         const deptKey = getDeptKey(dept);
-        const deptSearchParams = { dept: deptKey };
+        const session = { year: 2021, season: 'W' }
+        const deptSearchParams = { dept: deptKey, session, scraperType };
         return (<ResultDisplayItem key={deptKey}
                                     heading={deptKey}
                                     label={getDeptTitle(dept)}
@@ -27,7 +30,7 @@ function DeptList(props) {
     useEffect(() => {
         if (!props.deptList) {
             const session = { year: 2021, season: 'W' };
-            props.getDeptList({ session });
+            props.getDeptList({ session, scraperType });
         }
     });
 

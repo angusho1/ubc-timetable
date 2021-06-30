@@ -81,7 +81,7 @@ function SearchForm(props) {
 
                 <div className="text-center">
                     <input className="m-1 btn btn-primary" type="submit" value="Search" />
-                    <button className="m-1 btn btn-dark" type="button" onClick={getDeptList}>Browse</button>
+                    <button className="m-1 btn btn-dark" type="button" onClick={() => props.getDeptList({ session: null, scraperType })}>Browse</button>
                 </div>
             </Form>
         </Formik>

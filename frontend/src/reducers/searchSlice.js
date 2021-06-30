@@ -1,5 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ScraperType } from '../data/ScraperType';
 import { SearchType } from '../data/SearchType';
+import CourseDataService from '../services/courseDataService';
+
+const services = {
+    [ScraperType.NATIVE]: new CourseDataService(ScraperType.NATIVE),
+    [ScraperType.UBCCOURSESAPI]: new CourseDataService(ScraperType.UBCCOURSESAPI),
+}
 
 const initialState = {
     objectOnDisplay: null,
@@ -14,39 +21,37 @@ const initialState = {
 
 export const getDeptList = createAsyncThunk('search/getDeptList',
     async (searchData) => {
-        const session = searchData.session;
-        const scraperType = searchData.scraperType;
-        return getDeptListBySession(session, scraperType);
+        const { scraperType, ...payload } = searchData;
+        const courseDataService = services[scraperType];
+        const res = await courseDataService.getAllSubjects(payload);
+        return res;
     }
 );
 
 export const searchDept = createAsyncThunk('search/searchDept', 
     async (searchData) => {
-        const deptKey = formatKey(searchData.dept);
-        const session = searchData.session;
-        const scraperType = searchData.scraperType;
-        return searchDeptByKey(deptKey, session, scraperType);
+        const { scraperType, ...payload } = searchData;
+        const courseDataService = services[scraperType];
+        const res = await courseDataService.searchDept(payload);
+        return res;
     }
 );
 
 export const searchCourse = createAsyncThunk('search/searchCourse', 
     async (searchData) => {
-        const deptKey = formatKey(searchData.dept);
-        const courseKey = formatKey(searchData.course);
-        const session = searchData.session;
-        const scraperType = searchData.scraperType;
-        return searchCourseByKey(deptKey, courseKey, session, scraperType);
+        const { scraperType, ...payload } = searchData;
+        const courseDataService = services[scraperType];
+        const res = await courseDataService.searchCourse(payload);
+        return res;
     }
 );
 
 export const searchSection = createAsyncThunk('search/searchSection', 
     async (searchData) => {
-        const deptKey = formatKey(searchData.dept);
-        const courseKey = formatKey(searchData.course);
-        const sectionKey = formatKey(searchData.section);
-        const session = searchData.session;
-        const scraperType = searchData.scraperType;
-        return searchSectionByKey(deptKey, courseKey, sectionKey, session, scraperType);
+        const { scraperType, ...payload } = searchData;
+        const courseDataService = services[scraperType];
+        const res = await courseDataService.searchSection(payload);
+        return res;
     }
 );
 
@@ -111,92 +116,6 @@ function setFailedSearch(state, action) {
     state.status = 'failed';
     state.error = action.error.message;
     state.objectOnDisplay = null;
-}
-
-function getDeptListBySession(session) {
-    return fetchData()
-        .then(data => {
-            const courseData = data.departments;
-            const deptList = Object.values(courseData)
-                .map(dept => { 
-                    return { subjCode: dept.subjCode,
-                            title: dept.title,
-                            faculty: dept.faculty,
-                            session };
-                });
-            return deptList;
-        });
-}
-
-// TODO: Use session in actual search
-function searchDeptByKey(deptKey, session) {
-    return fetchData()
-        .then(data => {
-            const deptSearchResult = data.departments[deptKey];
-            if (!deptSearchResult) {
-                throw new Error(`'${deptKey}' is not a valid department`);
-            }
-            deptSearchResult['session'] = session;
-            return deptSearchResult;
-        });
-}
-
-function searchCourseByKey(deptKey, courseKey, session) {
-    return searchDeptByKey(deptKey)
-        .then(deptSearchResult => {
-            const courseSearchResult = deptSearchResult.courses[courseKey];
-            if (!courseSearchResult) {
-                throw new Error(`'${deptKey} ${courseKey}' is not a valid course`);
-            }
-            courseSearchResult['deptObj'] = copyDeptProperties(deptSearchResult);
-            courseSearchResult['session'] = session;
-            return courseSearchResult;
-        });
-}
-
-function searchSectionByKey(deptKey, courseKey, sectionKey, session) {
-    return searchCourseByKey(deptKey, courseKey)
-        .then(courseSearchResult => {
-            const sectionSearchResult = courseSearchResult.sections[sectionKey];
-            if (!sectionSearchResult) {
-                throw new Error(`'${deptKey} ${courseKey} ${sectionKey}' is not a valid section`);
-            }
-            sectionSearchResult['courseObj'] = copyCourseProperties(courseSearchResult);
-            sectionSearchResult['session'] = session;
-            return sectionSearchResult;
-        });
-}
-
-function copyDeptProperties(deptObj) {
-    let result = {};
-    for (let prop in deptObj) {
-        if (Object.prototype.hasOwnProperty.call(deptObj, prop) && prop !== 'courses') {
-            result[prop] = deptObj[prop];
-        }
-    }
-    return result;
-}
-
-function copyCourseProperties(courseObj) {
-    let result = {};
-    for (let prop in courseObj) {
-        if (Object.prototype.hasOwnProperty.call(courseObj, prop) && prop !== 'sections') {
-            result[prop] = courseObj[prop];
-        }
-    }
-    return result;
-}
-
-/**
- * TODO: move API calls into a service
- */
-function fetchData() {
-    return fetch('/courseData.json')
-        .then(res => res.json());
-}
-
-function formatKey(key) {
-    return key.toUpperCase().replace(/\s+/g, '');
 }
 
 export const { displaySection } = searchSlice.actions;

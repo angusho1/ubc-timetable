@@ -73,7 +73,6 @@ export class AppControl extends Component {
     }
 
     render() {
-        const resultDisplay = this.renderResultDisplay();
 
         return (
             <ScraperContext.Provider value={ScraperType.NATIVE}>
@@ -85,7 +84,7 @@ export class AppControl extends Component {
                                 <SearchForm />
                             </div>
                             <div className={"col-lg-12 col-md-7 col-sm-8 col-12"}>
-                                {resultDisplay}
+                                {this.renderResultDisplay()}
                             </div>
                         </div>
                     </div>

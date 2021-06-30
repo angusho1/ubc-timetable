@@ -1,57 +1,58 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchCourse } from '../../reducers/searchSlice';
 import { getDeptTitle, getDeptKey, getFacultyName, getDeptCourses, getCourseKey } from '../../utils/selectors.js';
+import { ScraperContext } from '../AppControl';
 
-export class DeptResultDisplay extends Component {
-    getTitle() {
-        const deptObj = this.getDeptObj();
+export function DeptResultDisplay(props) {
+    const scraperType = useContext(ScraperContext);
+
+    function getTitle() {
+        const deptObj = getDeptObj();
         return `${getDeptTitle(deptObj)} (${getDeptKey(deptObj)})`;
     }
 
-    getSubHeading() {
-        return getFacultyName(this.getDeptObj());
+    function getSubHeading() {
+        return getFacultyName(getDeptObj());
     }
 
-    renderDisplayComponents() {
+    function renderDisplayComponents() {
         return (<div>
             <div>Courses:</div>
             <div className="list-group result-display-item-container">
-                { this.renderCourses() }
+                { renderCourses() }
             </div>
         </div>);
     }
 
-    renderCourses() {
-        const deptObj = this.getDeptObj();
+    function renderCourses() {
+        const deptObj = getDeptObj();
         const courses = Object.values(getDeptCourses(deptObj));
         return courses.map((course) => {
             const session = { year: 2021, season: 'W' } // TODO: Remove hardcoded session
             const deptKey = getDeptKey(deptObj);
             const courseKey = getCourseKey(course);
-            const courseSearchParams = { dept: deptKey, course: courseKey, session };
+            const courseSearchParams = { dept: deptKey, course: courseKey, session, scraperType };
             return (<ResultDisplayItem key={course.courseCode}
                                         heading={course.courseCode}
                                         label={course.courseTitle}
-                                        onClick={this.props.searchCourse.bind(this, courseSearchParams)} />);
+                                        onClick={() => props.searchCourse(courseSearchParams)} />);
         });
         
     }
 
-    getDeptObj() {
-        return this.props.deptObj;
+    function getDeptObj() {
+        return props.deptObj;
     }
 
-    render() {
-        return (
-            <ResultDisplay  title={this.getTitle()}
-                            subHeading={this.getSubHeading()}>
-                {this.renderDisplayComponents()}
-            </ResultDisplay>
-        )
-    }
+    return (
+        <ResultDisplay  title={getTitle()}
+                        subHeading={getSubHeading()}>
+            {renderDisplayComponents()}
+        </ResultDisplay>
+    )
 }
 
 export default connect(null, { searchCourse })(DeptResultDisplay);
