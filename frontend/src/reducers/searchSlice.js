@@ -8,6 +8,13 @@ const services = {
     [ScraperType.UBCCOURSESAPI]: new CourseDataService(ScraperType.UBCCOURSESAPI),
 }
 
+// const service = services[ScraperType.UBCCOURSESAPI];
+// const session = null;
+// service.getAllSubjects({session}).then(res => console.log(res));
+// service.searchDept({dept: 'CPSC', session}).then(res => console.log(res));
+// service.searchCourse({dept: 'CPSC', course: '221', session}).then(res => console.log(res));
+// service.searchSection({dept: 'CPSC', course: '221', section: '102', session}).then(res => console.log(res));
+
 const initialState = {
     objectOnDisplay: null,
     typeObjectOnDisplay: SearchType.SUBJECTS,

@@ -1,28 +1,67 @@
 import { ScraperType } from "../data/ScraperType";
 
 const baseUrls = {
-    [ScraperType.NATIVE]: '/',
-    [ScraperType.UBCCOURSESAPI]: 'https://api.ubccourses.com/'
+    [ScraperType.NATIVE]: '',
+    [ScraperType.UBCCOURSESAPI]: 'https://api.ubccourses.com'
 }
 
 const getAllSubjects = {
     [ScraperType.NATIVE]: getDeptListBySession,
-    [ScraperType.UBCCOURSESAPI]: () => {}
+    [ScraperType.UBCCOURSESAPI]: async (session) => {
+        const url = `${baseUrls[ScraperType.UBCCOURSESAPI]}/subject`;
+        const res = (await (await fetch(url)).json()).subjects;
+        return res.filter(subject => subject.hasCourses).map(subject => ({ ...subject, session }));
+    }
 }
 
 const searchDept = {
     [ScraperType.NATIVE]: searchDeptByKey,
-    [ScraperType.UBCCOURSESAPI]: () => {}
+    [ScraperType.UBCCOURSESAPI]: async (deptKey, session) => {
+        const subjectsUrl = `${baseUrls[ScraperType.UBCCOURSESAPI]}/subject`;
+        const subjects = (await (await fetch(subjectsUrl)).json()).subjects;
+        const subjectData = subjects.find(subj => subj.subject === deptKey);
+        if (typeof subjectData === 'undefined') throw new Error(`'${deptKey}' is not a valid department`);
+        const coursesUrl = `${baseUrls[ScraperType.UBCCOURSESAPI]}/course/${deptKey}`;
+        const courses = (await (await fetch(coursesUrl)).json()).courses;
+        return {
+            ...subjectData,
+            courses,
+            session
+        }
+    }
 }
 
 const searchCourse = {
     [ScraperType.NATIVE]: searchCourseByKey,
-    [ScraperType.UBCCOURSESAPI]: () => {}
+    [ScraperType.UBCCOURSESAPI]: async (deptKey, courseKey, session) => {
+        const coursesUrl = `${baseUrls[ScraperType.UBCCOURSESAPI]}/course/${deptKey}`;
+        const courses = (await (await fetch(coursesUrl)).json()).courses;
+        const courseData = courses.find(course => course.course === courseKey);
+        if (typeof courseData === 'undefined') throw new Error(`'${deptKey} ${courseKey}' is not a valid course`);
+        const sectionsUrl = `${baseUrls[ScraperType.UBCCOURSESAPI]}/section/${deptKey}/${courseKey}`;
+        const sections = (await (await fetch(sectionsUrl)).json()).sections;
+        return {
+            ...courseData,
+            sections,
+            session
+        }
+    }
 }
 
 const searchSection = {
     [ScraperType.NATIVE]: searchSectionByKey,
-    [ScraperType.UBCCOURSESAPI]: () => {}
+    [ScraperType.UBCCOURSESAPI]: async (deptKey, courseKey, sectionKey, session) => {
+        const sectionUrl = `${baseUrls[ScraperType.UBCCOURSESAPI]}/sectioninfo/${deptKey}/${courseKey}/${sectionKey}`;
+        try {
+            const section = await (await fetch(sectionUrl)).json();
+            return {
+                ...section,
+                session
+            }
+        } catch (e) {
+            throw new Error(`'${deptKey} ${courseKey} ${sectionKey}' is not a valid section`)
+        }
+    }
 }
 
 export default class CourseDataService {
