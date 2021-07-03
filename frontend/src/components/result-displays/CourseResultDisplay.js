@@ -25,7 +25,7 @@ export function CourseResultDisplay(props) {
         const courseObj = getCourseObj();
         return (<div>
             <div>Credits: <b>{getCourseCredits(courseObj)}</b></div>
-            <div>Pre-Reqs: {displayPreReqs(courseObj)}</div>
+            <div>{displayPreReqs(courseObj)}</div>
             <div>Sections:</div>
             <div className="list-group result-display-item-container">
                 { renderSections() }
@@ -54,12 +54,21 @@ export function CourseResultDisplay(props) {
 
     function displayPreReqs(courseObj) {
         const prereqs = getCoursePreReqs(courseObj);
+        if (!prereqs) return null;
+        const prereqsStr = `Pre-Reqs: ${prereqs}`;
         const courses = prereqs.matchAll(courseCodeRegex);
         let currCourse = courses.next();
-        let res = prereqs;
+        let res = prereqsStr;
+        const coursesSeen = {};
         while (typeof currCourse.value !== 'undefined') {
             const courseStr = currCourse.value[0];
-            res = res.replace(courseStr, `<span class="badge bg-primary" coursestr="${courseStr}"></span>`);
+            if (courseStr in coursesSeen) {
+                currCourse = courses.next();
+                continue;
+            };
+            coursesSeen[courseStr] = true;
+            const re = new RegExp(courseStr, 'g');
+            res = res.replace(re, `<span class="badge bg-primary course-badge" coursestr="${courseStr}"></span>`);
             currCourse = courses.next();
         }
         const options = {
