@@ -1,9 +1,38 @@
+import fetch from 'node-fetch';
+import jsdom from 'jsdom';
+const { JSDOM } = jsdom;
+
 const baseUrl = 'https://courses.students.ubc.ca/cs/courseschedule';
 
 export async function getAllDepartments() {
     console.log('Getting all departments');
     const url = `${baseUrl}?pname=subjarea&tname=subj-all-departments`;
-    return { url };
+    const html = await fetch(url).then(res => res.text());
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
+    const tbody = document.querySelector('#mainTable tbody');
+    const res = { departments: [] }
+
+    for (let row of tbody.children) {
+        let subjCode = row.children[0].textContent;
+        const subjTitle = row.children[1].textContent.trim();
+        const faculty = row.children[2].textContent;
+
+        const noCourses = /\s\*/;
+        if (noCourses.test(subjCode)) {
+            subjCode = subjCode.replace(" \*", "");
+        }
+
+        let rowData = {
+            "subjCode" : subjCode,
+            "title" : subjTitle,
+            "faculty" : faculty,
+        };
+        
+        res.departments[subjCode] = rowData;
+    }
+
+    return res;
 }
 
 export async function getDepartment(dept) {
