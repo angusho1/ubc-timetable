@@ -5,6 +5,7 @@ import logger from 'morgan';
 
 import errorHandler from './middleware/error.middleware';
 import buildingRoutes from './routes/building.route';
+import courseDataRoutes from './routes/course-data.route';
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(cookieParser());
 app.use(express.static(path.resolve("./", 'build')));
 
 app.use(buildingRoutes);
+app.use(courseDataRoutes);
+
 app.use(errorHandler);
 
 export default app;
