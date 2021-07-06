@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ResultDisplay from './ResultDisplay';
 import ResultDisplayItem from './ResultDisplayItem/ResultDisplayItem';
 import { searchSection, searchCourse } from '../../reducers/searchSlice';
-import { getCourseDeptKey, getCourseKey, getCourseTitle, getCourseCredits, getCoursePreReqs, getCourseSections, getSectionKey } from '../../utils/selectors.js';
+import { getCourseCode, getDeptKey, getCourseKey, getCourseTitle, getCourseCredits, getCoursePreReqs, getCourseSections, getSectionKey } from '../../utils/selectors.js';
 import { ScraperContext } from '../AppControl';
 import parse, { attributesToProps } from 'html-react-parser';
 
@@ -14,7 +14,7 @@ export function CourseResultDisplay(props) {
 
     function getTitle() {
         const courseObj = getCourseObj();
-        return `${getCourseDeptKey(courseObj)} ${getCourseKey(courseObj)}`;
+        return getCourseCode(courseObj);
     }
 
     function getSubHeading() {
@@ -37,7 +37,7 @@ export function CourseResultDisplay(props) {
         const courseObj = getCourseObj();
         const sections = Object.values(getCourseSections(courseObj));
         return sections.map((section) => {
-            const deptKey = getCourseDeptKey(courseObj);
+            const deptKey = getDeptKey(courseObj);
             const courseKey = getCourseKey(courseObj);
             const sectionKey = getSectionKey(section);
             const sectionSearchParams = { dept: deptKey, course: courseKey, section: sectionKey, session, scraperType };

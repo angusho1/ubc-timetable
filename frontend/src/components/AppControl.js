@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { addSection, removeSection } from '../reducers/timetableSlice';
 import DeptList from './result-displays/DeptList';
 import { ScraperType } from '../data/ScraperType';
+import { getSectionCode } from '../utils/selectors';
 
 export const ScraperContext = createContext(ScraperType.NATIVE);
 
@@ -37,10 +38,7 @@ export class AppControl extends Component {
             throw new Error("The current object on display is not a section");
         }
         const sectionObj = this.props.objectOnDisplay;
-        const deptKey = sectionObj.courseObj.deptObj.subjCode;
-        const courseKey = sectionObj.courseObj.course;
-        const sectionKey = sectionObj.section;
-        return `${deptKey} ${courseKey} ${sectionKey}`;
+        return getSectionCode(sectionObj);
     }
 
     renderResultDisplay() {

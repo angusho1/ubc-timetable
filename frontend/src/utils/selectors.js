@@ -6,8 +6,8 @@ export function getDeptTitle(deptObj) {
     return deptObj.title;
 }
 
-export function getDeptKey(deptObj) {
-    return deptObj.subjCode;
+export function getDeptKey(obj) {
+    return obj.subjCode;
 }
 
 export function getFacultyName(deptObj) {
@@ -21,11 +21,11 @@ export function getDeptCourses(deptObj) {
 // COURSE DISPLAY
 
 export function getCourseKey(courseObj) {
-    return courseObj.course;
+    return courseObj.code;
 }
 
 export function getCourseTitle(courseObj) {
-    return courseObj.courseTitle;
+    return courseObj.title;
 }
 
 export function getCourseCredits(courseObj) {
@@ -40,8 +40,8 @@ export function getCourseSections(courseObj) {
     return courseObj.sections;
 }
 
-export function getCourseDeptKey(courseObj) {
-    return courseObj.deptObj.subjCode;
+export function getCourseCode(courseObj) {
+    return courseObj.courseCode;
 }
 
 export function getSectionKey(sectionObj) {
@@ -58,8 +58,16 @@ export function getSectionActivity(sectionObj) {
     return sectionObj.activity;
 }
 
-export function getCredits(sectionObj) {
-    return sectionObj.courseObj.credits;
+export function getSectionHeading(sectionObj) {
+    return sectionObj.heading;
+}
+
+export function getSectionCourseTitle(sectionObj) {
+    return sectionObj.courseTitle;
+}
+
+export function getSectionCredits(sectionObj) {
+    return sectionObj.credits;
 }
 
 export function getSectionClasses(sectionObj) {

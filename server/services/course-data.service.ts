@@ -64,10 +64,10 @@ export async function getCoursesByDept(dept) {
     if (tbody != null) {
         for (let row of tbody.children) {
             const courseCode = row.children[0].textContent.trim();
-            const course = courseCode.split(' ')[1];
+            const code = courseCode.split(' ')[1];
             const courseTitle = row.children[1].textContent;
 
-            res.courses.push({ "courseCode" : courseCode, "courseTitle": courseTitle, "course" : course });
+            res.courses.push({ "courseCode" : courseCode, "courseTitle": courseTitle, "code" : code });
         }
     }
     return res;
@@ -76,11 +76,14 @@ export async function getCoursesByDept(dept) {
 export async function getCourse(dept, course) {
     console.log(`Getting course '${dept} ${course}'`);
     const url = `${baseUrl}?pname=subjarea&tname=subj-course&dept=${dept}&course=${course}`;
+    const courseCodeRegex = /[A-Z]{2,4}\s[A-Z0-9]{3,4}/;
     const document = await fetchPageDoc(url);
     const tbody = document.querySelector('.section-summary tbody');
     const description = document.querySelector('.content.expand p').textContent;
+    const heading = document.querySelector('.content.expand h4').textContent;
     const pTags = document.querySelectorAll('p');
-    const credits = pTags[1].textContent.replace("Credits: ", "");
+    const credits = parseInt(pTags[1].textContent.replace("Credits: ", "").trim());
+    const title = heading.replace(courseCodeRegex, '').trim();
     let preReqs = "";
     let coReqs = "";
 
@@ -94,6 +97,10 @@ export async function getCourse(dept, course) {
 
     const res = { sections: [] };
     
+    res["subjCode"] = dept.toUpperCase();
+    res["code"] = course.toUpperCase();
+    res['title'] = title;
+    res["courseCode"] = `${dept.toUpperCase()} ${course.toUpperCase()}`
     res["description"] = description;
     res["credits"] = credits;
     res["prereqs"] = preReqs;
@@ -133,6 +140,11 @@ export async function getSection(dept, course, section) {
     console.log(`Getting section '${dept} ${course} ${section}'`);
     const url = `${baseUrl}?pname=subjarea&tname=subj-section&dept=${dept}&course=${course}&section=${section}`;
     const document = await fetchPageDoc(url);
+    const heading = document.querySelector('.content.expand h4').textContent;
+    const sectionCode = `${dept.toUpperCase()} ${course.toUpperCase()} ${section.toUpperCase()}`;
+    const activity = heading.split('(')[1].split(')')[0];
+    const courseTitle = document.querySelector('.content.expand h5').textContent;
+    const credits = parseInt(document.querySelectorAll('p')[1].textContent.replace("Credits: ", "").trim());
 
     const sectionInfo = document.querySelector('.table-striped tbody');
 
@@ -200,6 +212,11 @@ export async function getSection(dept, course, section) {
     });
 
     const res = {
+        heading,
+        sectionCode,
+        activity,
+        courseTitle,
+        credits,
         totalSeatsRem,
         currentReg,
         generalSeatsRem,
